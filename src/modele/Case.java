@@ -3,14 +3,9 @@ package modele;
 import java.util.Random;
 
 public class Case {
-    private static final Random rnd = new Random();
-
     public boolean getState() {
-
         return state;
     }
-
-    private boolean state;
 
     public void rndState() {
         state = rnd.nextBoolean();
@@ -22,5 +17,6 @@ public class Case {
         // Utiliser la fonction getCase de Environnement
     }
 
-
+    private static final Random rnd = new Random();
+    private boolean state;
 }

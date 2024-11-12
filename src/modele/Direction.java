@@ -1,5 +1,7 @@
 package modele;
 
 public enum Direction {
-    h, hd, d, db, b, bg, g, gh
+     upL,   up,   upR,
+    left,        right,
+    downL, down, downR
 }

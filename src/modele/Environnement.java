@@ -3,7 +3,17 @@ package modele;
 import java.util.Observable;
 
 public class Environnement extends Observable implements Runnable {
-    private Case[][] tab;
+    public Environnement(int sizeX, int sizeY) {
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+
+        tab = new Case[sizeX][sizeY];
+        for(int i = 0 ; i < sizeX ; i++) {
+            for(int j = 0 ; j < sizeY ; j++) {
+                tab[i][j] = new Case();
+            }
+        }
+    }
 
     public int getSizeX() {
         return sizeX;
@@ -12,8 +22,6 @@ public class Environnement extends Observable implements Runnable {
     public int getSizeY() {
         return sizeY;
     }
-
-    private int sizeX, sizeY;
 
     public boolean getState(int x, int y) {
         return tab[x][y].getState();
@@ -24,31 +32,12 @@ public class Environnement extends Observable implements Runnable {
         return null;
     }
 
-
-    public Environnement(int _sizeX, int _sizeY) {
-
-        sizeX = _sizeX;
-        sizeY = _sizeY;
-
-        tab = new Case[sizeX][sizeY];
-        for (int i = 0; i < sizeX; i++) {
-            for (int j = 0; j < sizeY; j++) {
-                tab[i][j] = new Case();
-
-            }
-
-        }
-
-    }
-
     public void rndState() {
-        for (int i = 0; i < sizeX; i++) {
-            for (int j = 0; j < sizeY; j++) {
+        for(int i = 0 ; i < sizeX ; i++) {
+            for(int j = 0 ; j < sizeY ; j++) {
                 tab[i][j].rndState();
-
             }
         }
-
     }
 
     @Override
@@ -58,4 +47,8 @@ public class Environnement extends Observable implements Runnable {
         setChanged();
         notifyObservers();
     }
+
+    private Case[][] tab;
+    private int sizeX;
+    private int sizeY;
 }

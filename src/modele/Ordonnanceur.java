@@ -3,24 +3,23 @@ package modele;
 import static java.lang.Thread.*;
 
 public class Ordonnanceur extends Thread {
-
-    private long sleepTime;
-    private Runnable runnable;
-    public Ordonnanceur(long _sleepTime, Runnable _runnable) {
-        sleepTime = _sleepTime;
-        runnable = _runnable;
-
+    public Ordonnanceur(long sleepTime, Runnable runnable) {
+        this.sleepTime = sleepTime;
+        this.runnable = runnable;
     }
 
     public void run() {
-        while (true) {
+        while(true) {
             runnable.run();
+
             try {
                 sleep(sleepTime);
-            } catch (InterruptedException e) {
+            } catch(InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    private long sleepTime;
+    private Runnable runnable;
 }
