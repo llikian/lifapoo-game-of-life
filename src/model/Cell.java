@@ -3,8 +3,13 @@ package model;
 import java.util.Random;
 
 public class Cell {
+    private static final Random random = new Random();
+    private final Environment environment;
+    private boolean state;
+
     public Cell(Environment environment) {
         this.environment = environment;
+        randomState();
     }
 
     public boolean getState() {
@@ -34,13 +39,9 @@ public class Cell {
         }
     }
 
-    public boolean getCell(Direction direction) {
+    private boolean getCell(Direction direction) {
         Cell cell = environment.getCell(this, direction);
 
         return (cell != null) && cell.state;
     }
-
-    private static final Random random = new Random();
-    private final Environment environment;
-    private boolean state;
 }

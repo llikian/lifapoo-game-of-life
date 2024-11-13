@@ -1,6 +1,9 @@
 package model;
 
 public class Scheduler extends Thread {
+    private long sleepTime;
+    private Runnable runnable;
+
     public Scheduler(long sleepTime, Runnable runnable) {
         this.sleepTime = sleepTime;
         this.runnable = runnable;
@@ -12,12 +15,9 @@ public class Scheduler extends Thread {
 
             try {
                 sleep(sleepTime);
-            } catch(InterruptedException e) {
-                e.printStackTrace();
+            } catch(InterruptedException exception) {
+                exception.printStackTrace();
             }
         }
     }
-
-    private long sleepTime;
-    private Runnable runnable;
 }

@@ -14,16 +14,19 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 public class Window extends JFrame implements Observer {
-    public Window(Environment _env) {
+    private JPanel[][] panels;
+    Environment environment;
+
+    public Window(Environment environment) {
         super();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        environment = _env;
+        this.environment = environment;
         build();
     }
 
     public void build() {
         setTitle("Game of Life");
-        setSize(600, 500);
+        setSize(600, 600);
 
         // Main Panel
         JPanel pan = new JPanel(new BorderLayout());
@@ -73,7 +76,4 @@ public class Window extends JFrame implements Observer {
             }
         }
     }
-
-    private JPanel[][] panels;
-    Environment environment;
 }
