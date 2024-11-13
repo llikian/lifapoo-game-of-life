@@ -1,6 +1,6 @@
-import modele.Environnement;
-import modele.Ordonnanceur;
-import vue_controleur.FenetrePrincipale;
+import model.Environment;
+import model.Scheduler;
+import view_controller.Window;
 
 import javax.swing.SwingUtilities;
 
@@ -12,14 +12,14 @@ public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                Environnement e = new Environnement(10, 10);
+                Environment environment = new Environment(10, 10);
 
-                FenetrePrincipale fenetre = new FenetrePrincipale(e);
-                fenetre.setVisible(true);
+                Window window = new Window(environment);
+                window.setVisible(true);
 
-                e.addObserver(fenetre);
+                environment.addObserver(window);
 
-                Ordonnanceur o = new Ordonnanceur(500, e);
+                Scheduler o = new Scheduler(500, environment);
                 o.start();
             }
         });

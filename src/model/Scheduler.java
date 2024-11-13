@@ -1,9 +1,7 @@
-package modele;
+package model;
 
-import static java.lang.Thread.*;
-
-public class Ordonnanceur extends Thread {
-    public Ordonnanceur(long sleepTime, Runnable runnable) {
+public class Scheduler extends Thread {
+    public Scheduler(long sleepTime, Runnable runnable) {
         this.sleepTime = sleepTime;
         this.runnable = runnable;
     }
