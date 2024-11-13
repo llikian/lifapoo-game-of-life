@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Graphics;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -19,10 +20,17 @@ public class Window extends JFrame implements Observer {
     private JPanel[][] panels;
     private Environment environment;
 
+    public Color backgroundColor;
+    public Color foregroundColor;
+    public Color backgroundBrighter;
+
     public Window(Environment environment) {
         super();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.environment = environment;
+        this.backgroundColor = new Color(30, 30, 30);
+        this.foregroundColor = new Color(Color.white.getRGB());
+        this.backgroundBrighter = new Color(50, 50, 50);
         build();
     }
 
@@ -30,9 +38,6 @@ public class Window extends JFrame implements Observer {
         setTitle("Game of Life");
         setSize(600, 600);
         setLocationRelativeTo(null);
-
-        Color backgroundColor = new Color(30, 30, 30);
-        Color textColor = Color.white;
 
         // Main Panel
         JPanel pan = new JPanel(new BorderLayout());
@@ -42,12 +47,26 @@ public class Window extends JFrame implements Observer {
         panels = new JPanel[environment.getWidth()][environment.getHeight()];
 
         pan1.setBackground(backgroundColor);
-        pan1.setForeground(textColor);
+        pan1.setForeground(foregroundColor);
         pan1.setBorder(BorderFactory.createLineBorder(Color.white, 1));
 
         for(int i = 0 ; i < environment.getWidth() ; i++) {
             for(int j = 0 ; j < environment.getHeight() ; j++) {
-                panels[i][j] = new JPanel();
+                panels[i][j] = new JPanel() {
+                    public void paintComponent(Graphics graphics) {
+                        super.paintComponent(graphics);
+
+                        int width = getWidth() / 2;
+                        int height = getHeight() / 2;
+                        int radius = width / 2;
+
+                        graphics.setColor(Color.red);
+                        graphics.fillOval(width - radius, height - radius, radius * 2, radius * 2);
+                    }
+                };
+                panels[i][j].setBackground(backgroundColor);
+                panels[i][j].setForeground(foregroundColor);
+                panels[i][j].setVisible(environment.getState(i, j));
 
                 pan1.add(panels[i][j]);
             }
@@ -58,7 +77,7 @@ public class Window extends JFrame implements Observer {
         pan2.add(new JButton("b1"));
         pan2.add(new JTextField("jt1"));
         pan2.setBackground(backgroundColor);
-        pan2.setForeground(textColor);
+        pan2.setForeground(foregroundColor);
         pan2.setBorder(BorderFactory.createLineBorder(Color.white, 1));
 
         pan.add(pan1, BorderLayout.CENTER);
@@ -74,24 +93,20 @@ public class Window extends JFrame implements Observer {
         menuBar.add(menu);
         setJMenuBar(menuBar);
 
-        menuBar.setBackground(new Color(50, 50, 50));
-        menuBar.setForeground(textColor);
+        menuBar.setBackground(backgroundBrighter);
+        menuBar.setForeground(foregroundColor);
         menuBar.setBorder(null);
         menu.setBackground(backgroundColor);
-        menu.setForeground(textColor);
+        menu.setForeground(foregroundColor);
         itemLoad.setBackground(backgroundColor);
-        itemLoad.setForeground(textColor);
+        itemLoad.setForeground(foregroundColor);
     }
 
     @Override
     public void update(Observable o, Object arg) {
         for(int i = 0 ; i < environment.getWidth() ; i++) {
             for(int j = 0 ; j < environment.getHeight() ; j++) {
-                if(environment.getState(i, j)) {
-                    panels[i][j].setBackground(Color.red);
-                } else {
-                    panels[i][j].setBackground(new Color(50, 50, 50));
-                }
+                panels[i][j].setVisible(environment.getState(i, j));
             }
         }
     }
