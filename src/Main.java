@@ -19,8 +19,8 @@ public class Main {
 
                 environment.addObserver(window);
 
-                Scheduler o = new Scheduler(500, environment);
-                o.start();
+                Scheduler scheduler = new Scheduler(500, environment);
+                scheduler.start();
             }
         });
     }

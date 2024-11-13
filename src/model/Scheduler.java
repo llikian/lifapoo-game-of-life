@@ -11,9 +11,8 @@ public class Scheduler extends Thread {
 
     public void run() {
         while(true) {
-            runnable.run();
-
             try {
+                runnable.run();
                 sleep(sleepTime);
             } catch(InterruptedException exception) {
                 exception.printStackTrace();

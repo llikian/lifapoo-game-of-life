@@ -12,6 +12,11 @@ public class Cell {
         randomState();
     }
 
+    public Cell(Cell cell) {
+        this.environment = cell.environment;
+        this.state = cell.state;
+    }
+
     public boolean getState() {
         return state;
     }
