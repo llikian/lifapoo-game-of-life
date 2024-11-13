@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                Environment environment = new Environment(25, 25);
+                Environment environment = new Environment(50, 50);
 
                 Window window = new Window(environment);
                 window.setVisible(true);

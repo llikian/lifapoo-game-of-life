@@ -38,29 +38,42 @@ public class Environment extends Observable implements Runnable {
         return cells[x][y].getState();
     }
 
+    public int getAliveCount(int x, int y) {
+        return cells[x][y].getAliveCount();
+    }
+
     public Cell getCell(Cell source, Direction direction) {
         Point pos = hashmap.get(source);
+        Point shift = new Point(0, 0);
 
         switch(direction) {
             case upL:
-                return oldCells[(pos.x - 1 + width) % width][(pos.y - 1 + height) % height];
-            case up:
-                return oldCells[(pos.x + width) % width][(pos.y - 1 + height) % height];
+                shift.x = (pos.y % 2 == 0) ? -1 : 0;
+                shift.y = -1;
+                break;
             case upR:
-                return oldCells[(pos.x + 1 + width) % width][(pos.y - 1 + height) % height];
+                shift.x = (pos.y % 2 == 0) ? 0 : 1;
+                shift.y = -1;
+                break;
             case left:
-                return oldCells[(pos.x - 1 + width) % width][(pos.y + height) % height];
+                shift.x = -1;
+                shift.y = 0;
+                break;
             case right:
-                return oldCells[(pos.x + 1 + width) % width][(pos.y + height) % height];
+                shift.x = 1;
+                shift.y = 0;
+                break;
             case downL:
-                return oldCells[(pos.x - 1 + width) % width][(pos.y + 1 + height) % height];
-            case down:
-                return oldCells[(pos.x + width) % width][(pos.y + 1 + height) % height];
+                shift.x = (pos.y % 2 == 0) ? -1 : 0;
+                shift.y = 1;
+                break;
             case downR:
-                return oldCells[(pos.x + 1 + width) % width][(pos.y + 1 + height) % height];
-            default: /* Should not be reached */
-                return null;
+                shift.x = (pos.y % 2 == 0) ? 0 : 1;
+                shift.y = 1;
+                break;
         }
+
+        return oldCells[(pos.x + shift.x + width) % width][(pos.y + shift.y + height) % height];
     }
 
     public void randomState() {
