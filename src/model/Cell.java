@@ -42,9 +42,9 @@ public class Cell {
         alive += environment.getCell(this, Direction.downR).state ? 1 : 0;
 
         if(state) {
-            state = alive == 1 || alive == 2;
+            state = alive == 2 || alive == 3; /* Survival */
         } else {
-            state = alive == 3;
+            state = alive == 3; /* Birth */
         }
     }
 }

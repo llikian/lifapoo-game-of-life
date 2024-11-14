@@ -80,6 +80,7 @@ public class Environment extends Observable implements Runnable {
         for(int i = 0 ; i < width ; i++) {
             for(int j = 0 ; j < height ; j++) {
                 cells[i][j].randomState();
+                oldCells[i][j] = new Cell(cells[i][j]);
             }
         }
     }

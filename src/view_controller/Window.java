@@ -4,24 +4,61 @@ import model.Environment;
 
 import java.awt.*;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 
 public class Window extends JFrame implements Observer {
-    private JPanel centralPanel;
+    private Environment environment;
+    private HexaPanel centralPanel;
+
+    private boolean pause;
 
     public Color backgroundColor;
     public Color foregroundColor;
     public Color backgroundBrighter;
+    public Color selectionColor;
+    public Color selectionForeground;
 
     public Window(Environment environment) {
         super();
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        this.environment = environment;
         this.centralPanel = new HexaPanel(environment);
+        this.pause = false;
         this.backgroundColor = new Color(30, 30, 30);
         this.foregroundColor = new Color(Color.white.getRGB());
         this.backgroundBrighter = new Color(50, 50, 50);
+        this.selectionColor = new Color(163, 29, 29);
+
+        /* Background Colors */
+        UIManager.put("Panel.background", backgroundColor);
+        UIManager.put("Button.background", backgroundBrighter);
+        UIManager.put("MenuBar.background", backgroundBrighter);
+        UIManager.put("Menu.background", backgroundBrighter);
+        UIManager.put("MenuItem.background", backgroundBrighter);
+        UIManager.put("PopupMenu.background", backgroundColor);
+
+        /* Foreground Colors */
+        UIManager.put("Panel.foreground", foregroundColor);
+        UIManager.put("Button.foreground", foregroundColor);
+        UIManager.put("MenuBar.foreground", foregroundColor);
+        UIManager.put("Menu.foreground", foregroundColor);
+        UIManager.put("MenuItem.foreground", foregroundColor);
+
+        /* Selected / Hovered Background Colors */
+        UIManager.put("Menu.selectionBackground", selectionColor);
+        UIManager.put("MenuItem.selectionBackground", selectionColor);
+        UIManager.put("Button.selectionBackground", selectionColor);
+
+        /* Selected / Hovered Foreground Colors */
+        UIManager.put("Menu.selectionForeground", foregroundColor);
+        UIManager.put("MenuItem.selectionForeground", foregroundColor);
+        UIManager.put("Button.selectionForeground", foregroundColor);
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         build();
     }
@@ -35,40 +72,56 @@ public class Window extends JFrame implements Observer {
         setLocationRelativeTo(null);
 
         /* Main Panel */
-        JPanel pan = new JPanel(new BorderLayout());
+        JPanel mainPanel = new JPanel(new BorderLayout());
 
         /* Central Panel */
-        centralPanel.setBackground(backgroundColor);
         centralPanel.setBorder(BorderFactory.createLineBorder(Color.white, 1));
+        centralPanel.setBackground(backgroundColor);
 
         /* Buttons Panel */
-        JPanel pan2 = new JPanel(new FlowLayout());
-        pan2.add(new JButton("b1"));
-        pan2.add(new JTextField("jt1"));
-        pan2.setBackground(backgroundColor);
-        pan2.setForeground(foregroundColor);
-        pan2.setBorder(BorderFactory.createLineBorder(Color.white, 1));
+        JPanel buttonsPanel = new JPanel(new FlowLayout());
 
-        pan.add(centralPanel, BorderLayout.CENTER);
-        pan.add(pan2, BorderLayout.EAST);
+        JButton restartButton = new JButton("Restart");
+        restartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                environment.randomState();
+            }
+        });
 
-        setContentPane(pan);
+        JButton pauseButton = new JButton("Pause");
+        pauseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if(pause) {
+                    pauseButton.setText("Pause");
+                    pause = false;
+                } else {
+                    pauseButton.setText("Play");
+                    pause = true;
+                }
+            }
+        });
+
+        buttonsPanel.add(restartButton);
+        buttonsPanel.add(pauseButton);
+        buttonsPanel.setBorder(BorderFactory.createLineBorder(Color.white, 1));
+
+        mainPanel.add(centralPanel, BorderLayout.CENTER);
+        mainPanel.add(buttonsPanel, BorderLayout.SOUTH);
+
+        setContentPane(mainPanel);
 
         /* Menu */
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("File");
         JMenuItem itemLoad = new JMenuItem("Load");
-        menu.add(itemLoad);
-        menuBar.add(menu);
-        setJMenuBar(menuBar);
 
-        menuBar.setBackground(backgroundBrighter);
-        menuBar.setForeground(foregroundColor);
+        setJMenuBar(menuBar);
+        menuBar.add(menu);
+        menu.add(itemLoad);
+
         menuBar.setBorder(null);
-        menu.setBackground(backgroundColor);
-        menu.setForeground(foregroundColor);
-        itemLoad.setBackground(backgroundColor);
-        itemLoad.setForeground(foregroundColor);
     }
 
     @Override
