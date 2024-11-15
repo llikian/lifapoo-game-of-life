@@ -13,13 +13,11 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Environment environment = new Environment(50, 50);
-
-                Window window = new Window(environment);
-                window.setVisible(true);
+                Scheduler scheduler = new Scheduler(500, environment);
+                Window window = new Window(environment, scheduler);
 
                 environment.addObserver(window);
 
-                Scheduler scheduler = new Scheduler(500, environment);
                 scheduler.start();
             }
         });

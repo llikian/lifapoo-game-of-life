@@ -1,37 +1,36 @@
 package view_controller;
 
 import model.Environment;
+import model.Scheduler;
 
 import java.awt.*;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 
 public class Window extends JFrame implements Observer {
-    private Environment environment;
-    private HexaPanel centralPanel;
-
-    private boolean pause;
+    private final Environment environment;
+    private final Scheduler scheduler;
+    private final HexaPanel centralPanel;
 
     public Color backgroundColor;
     public Color foregroundColor;
     public Color backgroundBrighter;
-    public Color selectionColor;
-    public Color selectionForeground;
+    public Color selectionBackground;
 
-    public Window(Environment environment) {
+    public Window(Environment environment, Scheduler scheduler) {
         super();
 
         this.environment = environment;
+        this.scheduler = scheduler;
         this.centralPanel = new HexaPanel(environment);
-        this.pause = false;
+
         this.backgroundColor = new Color(30, 30, 30);
-        this.foregroundColor = new Color(Color.white.getRGB());
+        this.foregroundColor = Color.white;
         this.backgroundBrighter = new Color(50, 50, 50);
-        this.selectionColor = new Color(163, 29, 29);
+        this.selectionBackground = new Color(163, 29, 29);
 
         /* Background Colors */
         UIManager.put("Panel.background", backgroundColor);
@@ -49,9 +48,9 @@ public class Window extends JFrame implements Observer {
         UIManager.put("MenuItem.foreground", foregroundColor);
 
         /* Selected / Hovered Background Colors */
-        UIManager.put("Menu.selectionBackground", selectionColor);
-        UIManager.put("MenuItem.selectionBackground", selectionColor);
-        UIManager.put("Button.selectionBackground", selectionColor);
+        UIManager.put("Menu.selectionBackground", selectionBackground);
+        UIManager.put("MenuItem.selectionBackground", selectionBackground);
+        UIManager.put("Button.selectionBackground", selectionBackground);
 
         /* Selected / Hovered Foreground Colors */
         UIManager.put("Menu.selectionForeground", foregroundColor);
@@ -70,6 +69,9 @@ public class Window extends JFrame implements Observer {
         setTitle("Game of Life");
         setSize(winWidth, winHeight);
         setLocationRelativeTo(null);
+        setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
+        setVisible(true);
 
         /* Main Panel */
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -81,8 +83,8 @@ public class Window extends JFrame implements Observer {
         /* Buttons Panel */
         JPanel buttonsPanel = new JPanel(new FlowLayout());
 
-        JButton restartButton = new JButton("Restart");
-        restartButton.addActionListener(new ActionListener() {
+        JButton resetButton = new JButton("Reset");
+        resetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 environment.randomState();
@@ -93,17 +95,17 @@ public class Window extends JFrame implements Observer {
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if(pause) {
+                if(scheduler.isPaused()) {
                     pauseButton.setText("Pause");
-                    pause = false;
                 } else {
                     pauseButton.setText("Play");
-                    pause = true;
                 }
+
+                scheduler.togglePause();
             }
         });
 
-        buttonsPanel.add(restartButton);
+        buttonsPanel.add(resetButton);
         buttonsPanel.add(pauseButton);
         buttonsPanel.setBorder(BorderFactory.createLineBorder(Color.white, 1));
 
@@ -122,6 +124,29 @@ public class Window extends JFrame implements Observer {
         menu.add(itemLoad);
 
         menuBar.setBorder(null);
+
+        /* Key Events */
+        Window window = this;
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent event) {
+                int key = event.getKeyCode();
+
+                switch(key) {
+                    case KeyEvent.VK_ESCAPE:
+                    dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+                        break;
+                    case KeyEvent.VK_SPACE:
+                        scheduler.togglePause();
+                        pauseButton.setText(scheduler.isPaused() ? "Play" : "Pause");
+                        pauseButton.repaint();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
     }
 
     @Override

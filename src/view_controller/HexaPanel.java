@@ -89,7 +89,7 @@ public class HexaPanel extends JPanel {
         double shiftY = Math.sqrt(0.75 * shiftX * shiftX);
 
         double totalW = (environment.getWidth() + 1.5) * shiftX;
-        double totalH = (environment.getHeight() + 2) * shiftY;
+        double totalH = (environment.getHeight() + 1) * shiftY;
 
         Polygon hex = new Polygon();
         double[][] origins = new double[6][2];
