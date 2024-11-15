@@ -17,6 +17,7 @@ public class Cell {
     public Cell(Cell cell) {
         this.environment = cell.environment;
         this.state = cell.state;
+        this.alive = cell.alive;
     }
 
     public boolean getState() {

@@ -14,6 +14,7 @@ public class Window extends JFrame implements Observer {
     private final Environment environment;
     private final Scheduler scheduler;
     private final HexaPanel centralPanel;
+    private final JLabel generationLabel;
 
     public Color backgroundColor;
     public Color foregroundColor;
@@ -26,6 +27,7 @@ public class Window extends JFrame implements Observer {
         this.environment = environment;
         this.scheduler = scheduler;
         this.centralPanel = new HexaPanel(environment);
+        this.generationLabel = new JLabel(" Generation 1 ");
 
         this.backgroundColor = new Color(30, 30, 30);
         this.foregroundColor = Color.white;
@@ -34,18 +36,24 @@ public class Window extends JFrame implements Observer {
 
         /* Background Colors */
         UIManager.put("Panel.background", backgroundColor);
+        UIManager.put("Label.background", backgroundBrighter);
         UIManager.put("Button.background", backgroundBrighter);
+        UIManager.put("CheckBox.background", backgroundBrighter);
         UIManager.put("MenuBar.background", backgroundBrighter);
         UIManager.put("Menu.background", backgroundBrighter);
         UIManager.put("MenuItem.background", backgroundBrighter);
         UIManager.put("PopupMenu.background", backgroundColor);
+        centralPanel.setBackground(backgroundColor);
 
         /* Foreground Colors */
         UIManager.put("Panel.foreground", foregroundColor);
+        UIManager.put("Label.foreground", foregroundColor);
         UIManager.put("Button.foreground", foregroundColor);
+        UIManager.put("CheckBox.foreground", foregroundColor);
         UIManager.put("MenuBar.foreground", foregroundColor);
         UIManager.put("Menu.foreground", foregroundColor);
         UIManager.put("MenuItem.foreground", foregroundColor);
+        generationLabel.setForeground(foregroundColor);
 
         /* Selected / Hovered Background Colors */
         UIManager.put("Menu.selectionBackground", selectionBackground);
@@ -56,6 +64,17 @@ public class Window extends JFrame implements Observer {
         UIManager.put("Menu.selectionForeground", foregroundColor);
         UIManager.put("MenuItem.selectionForeground", foregroundColor);
         UIManager.put("Button.selectionForeground", foregroundColor);
+
+        /* Border Thickness */
+        UIManager.put("Panel.borderColor", Color.white);
+        UIManager.put("MenuBar.borderColor", Color.white);
+
+        /* Border Color */
+        UIManager.put("Panel.border", 1);
+        UIManager.put("MenuBar.border", 0);
+
+        centralPanel.setBorder(BorderFactory.createLineBorder(Color.white, 1));
+        generationLabel.setBorder(BorderFactory.createLineBorder(Color.white, 1));
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -76,12 +95,15 @@ public class Window extends JFrame implements Observer {
         /* Main Panel */
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        /* Central Panel */
-        centralPanel.setBorder(BorderFactory.createLineBorder(Color.white, 1));
-        centralPanel.setBackground(backgroundColor);
-
         /* Buttons Panel */
+        JPanel downPanel = new JPanel(new BorderLayout());
         JPanel buttonsPanel = new JPanel(new FlowLayout());
+
+        mainPanel.add(centralPanel, BorderLayout.CENTER);
+        mainPanel.add(downPanel, BorderLayout.SOUTH);
+
+        downPanel.add(buttonsPanel, BorderLayout.CENTER);
+        downPanel.add(generationLabel, BorderLayout.WEST);
 
         JButton resetButton = new JButton("Reset");
         resetButton.addActionListener(new ActionListener() {
@@ -94,7 +116,7 @@ public class Window extends JFrame implements Observer {
         JButton pauseButton = new JButton("Pause");
         pauseButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent actionEvent) {
+            public void actionPerformed(ActionEvent event) {
                 if(scheduler.isPaused()) {
                     pauseButton.setText("Pause");
                 } else {
@@ -105,12 +127,17 @@ public class Window extends JFrame implements Observer {
             }
         });
 
+        JCheckBox outlinesCheckbox = new JCheckBox("Outlines", true);
+        outlinesCheckbox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                centralPanel.toggleOutlines();
+            }
+        });
+
         buttonsPanel.add(resetButton);
         buttonsPanel.add(pauseButton);
         buttonsPanel.setBorder(BorderFactory.createLineBorder(Color.white, 1));
-
-        mainPanel.add(centralPanel, BorderLayout.CENTER);
-        mainPanel.add(buttonsPanel, BorderLayout.SOUTH);
 
         setContentPane(mainPanel);
 
@@ -123,11 +150,8 @@ public class Window extends JFrame implements Observer {
         menuBar.add(menu);
         menu.add(itemLoad);
 
-        menuBar.setBorder(null);
-
         /* Key Events */
         Window window = this;
-
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent event) {
@@ -135,7 +159,7 @@ public class Window extends JFrame implements Observer {
 
                 switch(key) {
                     case KeyEvent.VK_ESCAPE:
-                    dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+                        dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
                         break;
                     case KeyEvent.VK_SPACE:
                         scheduler.togglePause();
@@ -152,5 +176,6 @@ public class Window extends JFrame implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         centralPanel.repaint();
+        generationLabel.setText(" Generation " + Integer.toString(environment.getGeneration()) + ' ');
     }
 }

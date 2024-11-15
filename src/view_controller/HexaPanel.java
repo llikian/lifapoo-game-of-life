@@ -10,10 +10,13 @@ public class HexaPanel extends JPanel {
     private final double[][] hexagon;
     private Color[] cellColors;
 
+    private boolean outlines;
+
     public HexaPanel(Environment environment) {
         this.environment = environment;
         this.hexagon = new double[6][2];
         this.cellColors = new Color[6];
+        this.outlines = true;
 
         this.hexagon[0][0] = 0.866025;
         this.hexagon[0][1] = 0.500000;
@@ -28,7 +31,6 @@ public class HexaPanel extends JPanel {
         this.hexagon[5][0] = 0.866025;
         this.hexagon[5][1] = -0.500000;
 
-
         this.cellColors[0] = new Color(0xDAF7A6);
         this.cellColors[1] = new Color(0xFFC300);
         this.cellColors[2] = new Color(0xFF5733);
@@ -37,46 +39,9 @@ public class HexaPanel extends JPanel {
         this.cellColors[5] = new Color(0x581845);
     }
 
-//    public void paintComponent(Graphics graphics) {
-//        super.paintComponent(graphics);
-//
-//        int width = getWidth();
-//        int height = getHeight();
-//
-//        int w = width / environment.getWidth();
-//        int h = height / environment.getHeight();
-//        int r = Integer.min(w, h) / 2;
-//
-//        Polygon hexagon = new Polygon();
-//        Polygon hex = new Polygon();
-//        final double angle = 2.0 * Math.PI / 6.0;
-//        for(int i = 0 ; i < 6 ; ++i) {
-//            hexagon.addPoint(r / 2 + (int) (r * Math.cos(i * angle)),
-//                    r / 2 + (int) (r * Math.sin(i * angle)));
-//
-//            hex.addPoint(0, 0);
-//        }
-//
-////        graphics.drawOval(i * w + (w - r) / 2, j * h + (h - r) / 2, r, r);
-//        Color cellsColor = graphics.getColor();
-//
-//        for(int i = 0 ; i < environment.getWidth() ; i++) {
-//            for(int j = 0 ; j < environment.getHeight() ; j++) {
-//                for(int k = 0 ; k < 6 ; k++) {
-//                    hex.xpoints[k] = (i + 1) * r * 2 + hexagon.xpoints[k];
-//                    hex.ypoints[k] = (j + 1) * r * 2 + hexagon.ypoints[k];
-//                }
-//
-//                if(environment.getState(i, j)) {
-//                    graphics.setColor(cellsColor);
-//                    graphics.fillPolygon(hex);
-//                }
-//
-//                graphics.setColor(Color.white);
-//                graphics.drawPolygon(hex);
-//            }
-//        }
-//    }
+    public void toggleOutlines() {
+        outlines = !outlines;
+    }
 
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
@@ -113,8 +78,10 @@ public class HexaPanel extends JPanel {
                     graphics.fillPolygon(hex);
                 }
 
-                graphics.setColor(Color.white);
-                graphics.drawPolygon(hex);
+                if(outlines) {
+                    graphics.setColor(Color.white);
+                    graphics.drawPolygon(hex);
+                }
             }
         }
     }

@@ -9,6 +9,7 @@ public class Environment extends Observable implements Runnable {
     private HashMap<Cell, Point> hashmap;
     private int width;
     private int height;
+    private int generation;
 
     public Environment(int width, int height) {
         this.cells = new Cell[width][height];
@@ -16,6 +17,7 @@ public class Environment extends Observable implements Runnable {
         this.hashmap = new HashMap<>();
         this.width = width;
         this.height = height;
+        this.generation = 1;
 
         for(int i = 0 ; i < width ; i++) {
             for(int j = 0 ; j < height ; j++) {
@@ -40,6 +42,10 @@ public class Environment extends Observable implements Runnable {
 
     public int getAliveCount(int x, int y) {
         return cells[x][y].getAliveCount();
+    }
+
+    public int getGeneration() {
+        return generation;
     }
 
     public Cell getCell(Cell source, Direction direction) {
@@ -77,6 +83,8 @@ public class Environment extends Observable implements Runnable {
     }
 
     public void randomState() {
+        generation = 1;
+
         for(int i = 0 ; i < width ; i++) {
             for(int j = 0 ; j < height ; j++) {
                 cells[i][j].randomState();
@@ -86,6 +94,8 @@ public class Environment extends Observable implements Runnable {
     }
 
     public void nextState() {
+        generation++;
+
         for(int i = 0 ; i < width ; i++) {
             for(int j = 0 ; j < height ; j++) {
                 cells[i][j].nextState();
