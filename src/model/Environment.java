@@ -91,6 +91,9 @@ public class Environment extends Observable implements Runnable {
                 oldCells[i][j] = new Cell(cells[i][j]);
             }
         }
+
+        setChanged();
+        notifyObservers();
     }
 
     public void nextState() {

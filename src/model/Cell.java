@@ -6,17 +6,20 @@ public class Cell {
     private static final Random random = new Random();
     private final Environment environment;
     private boolean state;
+    private boolean counted;
     private int alive;
 
     public Cell(Environment environment) {
         this.environment = environment;
-        this.alive = 0;
         randomState();
+        this.counted = false;
+        this.alive = 0;
     }
 
     public Cell(Cell cell) {
         this.environment = cell.environment;
         this.state = cell.state;
+        this.counted = cell.counted;
         this.alive = cell.alive;
     }
 
@@ -25,14 +28,20 @@ public class Cell {
     }
 
     public int getAliveCount() {
+        if(!counted) {
+            countAliveNeighbors();
+            counted = true;
+        }
+
         return alive;
     }
 
     public void randomState() {
         state = random.nextBoolean();
+        counted = false;
     }
 
-    public void nextState() {
+    public void countAliveNeighbors() {
         alive = 0;
 
         alive += environment.getCell(this, Direction.upL).state ? 1 : 0;
@@ -41,11 +50,21 @@ public class Cell {
         alive += environment.getCell(this, Direction.right).state ? 1 : 0;
         alive += environment.getCell(this, Direction.downL).state ? 1 : 0;
         alive += environment.getCell(this, Direction.downR).state ? 1 : 0;
+    }
+
+    public void nextState() {
+        if(!counted) {
+            countAliveNeighbors();
+        }
 
         if(state) {
-            state = alive == 2 || alive == 3; /* Survival */
+            /* Survival */
+            state = alive == 2 || alive == 3;
         } else {
-            state = alive == 3; /* Birth */
+            /* Birth */
+            state = alive == 3;
         }
+
+        counted = false;
     }
 }

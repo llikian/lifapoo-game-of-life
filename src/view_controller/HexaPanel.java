@@ -23,7 +23,7 @@ public class HexaPanel extends JPanel {
     public HexaPanel(Environment environment) {
         this.environment = environment;
         this.hexagon = new double[6][2];
-        this.cellColors = new Color[6];
+        this.cellColors = new Color[7];
 
         this.zoomRate = 0.5;
         this.zoom = 1.0;
@@ -47,12 +47,13 @@ public class HexaPanel extends JPanel {
         this.hexagon[5][0] = 0.866025;
         this.hexagon[5][1] = -0.500000;
 
-        this.cellColors[0] = new Color(0xDAF7A6);
-        this.cellColors[1] = new Color(0xFFC300);
-        this.cellColors[2] = new Color(0xFF5733);
-        this.cellColors[3] = new Color(0xC70039);
-        this.cellColors[4] = new Color(0x900C3F);
-        this.cellColors[5] = new Color(0x581845);
+        this.cellColors[0] = new Color(0xFFEAE6CC, true);
+        this.cellColors[1] = new Color(0xDAF7A6);
+        this.cellColors[2] = new Color(0xFFC300);
+        this.cellColors[3] = new Color(0xFF5733);
+        this.cellColors[4] = new Color(0xC70039);
+        this.cellColors[5] = new Color(0x900C3F);
+        this.cellColors[6] = new Color(0x581845);
     }
 
     public void toggleOutlines() {
@@ -123,7 +124,7 @@ public class HexaPanel extends JPanel {
                 }
 
                 if(environment.getState(i, j)) {
-                    graphics.setColor(cellColors[environment.getAliveCount(i, j) - 1]);
+                    graphics.setColor(cellColors[environment.getAliveCount(i, j)]);
                     graphics.fillPolygon(hex);
                 }
 

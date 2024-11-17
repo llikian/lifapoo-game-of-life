@@ -82,6 +82,7 @@ public class Window extends JFrame implements Observer {
     }
 
     public void build() {
+        Window window = this;
         int winWidth = 800;
         int winHeight = 800;
 
@@ -133,6 +134,7 @@ public class Window extends JFrame implements Observer {
             @Override
             public void actionPerformed(ActionEvent event) {
                 centralPanel.toggleOutlines();
+                window.repaint();
             }
         });
 
@@ -151,7 +153,6 @@ public class Window extends JFrame implements Observer {
         menu.add(itemLoad);
 
         /* Events */
-        Window window = this;
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent event) {
@@ -187,6 +188,8 @@ public class Window extends JFrame implements Observer {
                     default:
                         break;
                 }
+
+                window.repaint();
             }
         });
 
@@ -200,6 +203,8 @@ public class Window extends JFrame implements Observer {
                 } else {
                     centralPanel.zoomOut();
                 }
+
+                window.repaint();
             }
         });
     }
