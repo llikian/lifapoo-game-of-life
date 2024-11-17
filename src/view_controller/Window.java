@@ -14,7 +14,7 @@ public class Window extends JFrame implements Observer {
     private final Environment environment;
     private final Scheduler scheduler;
     private final HexaPanel centralPanel;
-    private final JLabel generationLabel;
+    private final JLabel infoLabel;
 
     public Color backgroundColor;
     public Color foregroundColor;
@@ -27,7 +27,7 @@ public class Window extends JFrame implements Observer {
         this.environment = environment;
         this.scheduler = scheduler;
         this.centralPanel = new HexaPanel(environment);
-        this.generationLabel = new JLabel(" Generation 1 ");
+        this.infoLabel = new JLabel("");
 
         this.backgroundColor = new Color(30, 30, 30);
         this.foregroundColor = Color.white;
@@ -53,7 +53,7 @@ public class Window extends JFrame implements Observer {
         UIManager.put("MenuBar.foreground", foregroundColor);
         UIManager.put("Menu.foreground", foregroundColor);
         UIManager.put("MenuItem.foreground", foregroundColor);
-        generationLabel.setForeground(foregroundColor);
+        infoLabel.setForeground(foregroundColor);
 
         /* Selected / Hovered Background Colors */
         UIManager.put("Menu.selectionBackground", selectionBackground);
@@ -74,7 +74,7 @@ public class Window extends JFrame implements Observer {
         UIManager.put("MenuBar.border", 0);
 
         centralPanel.setBorder(BorderFactory.createLineBorder(Color.white, 1));
-        generationLabel.setBorder(BorderFactory.createLineBorder(Color.white, 1));
+        infoLabel.setBorder(BorderFactory.createLineBorder(Color.white, 1));
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -94,6 +94,7 @@ public class Window extends JFrame implements Observer {
 
         /* Main Panel */
         JPanel mainPanel = new JPanel(new BorderLayout());
+        setContentPane(mainPanel);
 
         /* Buttons Panel */
         JPanel downPanel = new JPanel(new BorderLayout());
@@ -103,7 +104,7 @@ public class Window extends JFrame implements Observer {
         mainPanel.add(downPanel, BorderLayout.SOUTH);
 
         downPanel.add(buttonsPanel, BorderLayout.CENTER);
-        downPanel.add(generationLabel, BorderLayout.WEST);
+        downPanel.add(infoLabel, BorderLayout.WEST);
 
         JButton resetButton = new JButton("Reset");
         resetButton.addActionListener(new ActionListener() {
@@ -137,9 +138,8 @@ public class Window extends JFrame implements Observer {
 
         buttonsPanel.add(resetButton);
         buttonsPanel.add(pauseButton);
+        buttonsPanel.add(outlinesCheckbox);
         buttonsPanel.setBorder(BorderFactory.createLineBorder(Color.white, 1));
-
-        setContentPane(mainPanel);
 
         /* Menu */
         JMenuBar menuBar = new JMenuBar();
@@ -150,11 +150,13 @@ public class Window extends JFrame implements Observer {
         menuBar.add(menu);
         menu.add(itemLoad);
 
-        /* Key Events */
+        /* Events */
         Window window = this;
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent event) {
+                super.keyPressed(event);
+
                 int key = event.getKeyCode();
 
                 switch(key) {
@@ -166,8 +168,37 @@ public class Window extends JFrame implements Observer {
                         pauseButton.setText(scheduler.isPaused() ? "Play" : "Pause");
                         pauseButton.repaint();
                         break;
+                    case KeyEvent.VK_Z:
+                    case KeyEvent.VK_UP:
+                        centralPanel.move(HexaPanel.MoveDirection.up);
+                        break;
+                    case KeyEvent.VK_S:
+                    case KeyEvent.VK_DOWN:
+                        centralPanel.move(HexaPanel.MoveDirection.down);
+                        break;
+                    case KeyEvent.VK_Q:
+                    case KeyEvent.VK_LEFT:
+                        centralPanel.move(HexaPanel.MoveDirection.left);
+                        break;
+                    case KeyEvent.VK_D:
+                    case KeyEvent.VK_RIGHT:
+                        centralPanel.move(HexaPanel.MoveDirection.right);
+                        break;
                     default:
                         break;
+                }
+            }
+        });
+
+        addMouseWheelListener(new MouseAdapter() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent event) {
+                super.mouseWheelMoved(event);
+
+                if(event.getWheelRotation() < 0) {
+                    centralPanel.zoomIn();
+                } else {
+                    centralPanel.zoomOut();
                 }
             }
         });
@@ -176,6 +207,7 @@ public class Window extends JFrame implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         centralPanel.repaint();
-        generationLabel.setText(" Generation " + Integer.toString(environment.getGeneration()) + ' ');
+        infoLabel.setText(" Generation " + environment.getGeneration() +
+                                  " | Zoom: " + centralPanel.getZoom() + "x ");
     }
 }

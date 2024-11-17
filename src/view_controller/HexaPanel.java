@@ -10,12 +10,28 @@ public class HexaPanel extends JPanel {
     private final double[][] hexagon;
     private Color[] cellColors;
 
+    private final double zoomRate;
+    private double zoom;
+
+    public enum MoveDirection { up, down, left, right };
+    private final double sensitivity;
+    private double originX;
+    private double originY;
+
     private boolean outlines;
 
     public HexaPanel(Environment environment) {
         this.environment = environment;
         this.hexagon = new double[6][2];
         this.cellColors = new Color[6];
+
+        this.zoomRate = 0.5;
+        this.zoom = 1.0;
+
+        this.sensitivity = 5.0;
+        this.originX = 0.0;
+        this.originY = 0.0;
+
         this.outlines = true;
 
         this.hexagon[0][0] = 0.866025;
@@ -43,13 +59,46 @@ public class HexaPanel extends JPanel {
         outlines = !outlines;
     }
 
+    public double getZoom() {
+        return zoom;
+    }
+
+    public void zoomIn()  {
+        if(zoom < 10.0) {
+            zoom += zoomRate;
+        }
+    }
+
+    public void zoomOut()  {
+        if(zoom > zoomRate) {
+            zoom -= zoomRate;
+        }
+    }
+
+    public void move(MoveDirection direction) {
+        switch(direction) {
+            case up:
+                originY -= sensitivity;
+                break;
+            case down:
+                originY += sensitivity;
+                break;
+            case left:
+                originX -= sensitivity;
+                break;
+            case right:
+                originX += sensitivity;
+                break;
+        }
+    }
+
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
 
         int width = getWidth();
         int height = getHeight();
 
-        double r = 0.55 * width / environment.getWidth();
+        double r = zoom * 0.55 * width / environment.getWidth();
         double shiftX = 2.0 * Math.sqrt(0.75 * r * r);
         double shiftY = Math.sqrt(0.75 * shiftX * shiftX);
 
@@ -69,8 +118,8 @@ public class HexaPanel extends JPanel {
                 double shift = (j % 2 == 0) ? 0.0 : shiftX / 2.0;
 
                 for(int k = 0 ; k < 6 ; k++) {
-                    hex.xpoints[k] = (int) (origins[k][0] + (i + 1) * shiftX + shift);
-                    hex.ypoints[k] = (int) (origins[k][1] + (j + 1) * shiftY);
+                    hex.xpoints[k] = (int) (origins[k][0] + (i + 1) * shiftX + shift + originX);
+                    hex.ypoints[k] = (int) (origins[k][1] + (j + 1) * shiftY + originY);
                 }
 
                 if(environment.getState(i, j)) {
