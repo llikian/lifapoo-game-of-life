@@ -28,7 +28,7 @@ public class HexaPanel extends JPanel {
         this.zoomRate = 0.5;
         this.zoom = 1.0;
 
-        this.sensitivity = 5.0;
+        this.sensitivity = 10.0;
         this.originX = 0.0;
         this.originY = 0.0;
 
@@ -79,16 +79,16 @@ public class HexaPanel extends JPanel {
     public void move(MoveDirection direction) {
         switch(direction) {
             case up:
-                originY -= sensitivity;
-                break;
-            case down:
                 originY += sensitivity;
                 break;
+            case down:
+                originY -= sensitivity;
+                break;
             case left:
-                originX -= sensitivity;
+                originX += sensitivity;
                 break;
             case right:
-                originX += sensitivity;
+                originX -= sensitivity;
                 break;
         }
     }
