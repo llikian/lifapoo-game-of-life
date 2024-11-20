@@ -37,18 +37,18 @@ public class HexaPanel extends JPanel {
 
         this.outlines = true;
 
-        this.hexagon[0][0] = 0.866025;
-        this.hexagon[0][1] = 0.500000;
-        this.hexagon[1][0] = 0.000000;
-        this.hexagon[1][1] = 1.000000;
-        this.hexagon[2][0] = -0.866025;
-        this.hexagon[2][1] = 0.500000;
-        this.hexagon[3][0] = -0.866025;
-        this.hexagon[3][1] = -0.500000;
-        this.hexagon[4][0] = -0.000000;
-        this.hexagon[4][1] = -1.000000;
-        this.hexagon[5][0] = 0.866025;
-        this.hexagon[5][1] = -0.500000;
+        this.hexagon[0][0] = 0.8660254037844386467637231707529361834714026269051903140279034897;
+        this.hexagon[0][1] = 0.5;
+        this.hexagon[1][0] = 0.0;
+        this.hexagon[1][1] = 1.0;
+        this.hexagon[2][0] = -0.8660254037844386467637231707529361834714026269051903140279034897;
+        this.hexagon[2][1] = 0.5;
+        this.hexagon[3][0] = -0.8660254037844386467637231707529361834714026269051903140279034897;
+        this.hexagon[3][1] = -0.5;
+        this.hexagon[4][0] = -0.0;
+        this.hexagon[4][1] = -1.0;
+        this.hexagon[5][0] = 0.8660254037844386467637231707529361834714026269051903140279034897;
+        this.hexagon[5][1] = -0.5;
 
         this.cellColors[0] = new Color(0xFFEAE6);
         this.cellColors[1] = new Color(0xFFCC00);
