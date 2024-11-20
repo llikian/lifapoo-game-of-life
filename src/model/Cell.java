@@ -7,6 +7,13 @@ import java.util.Random;
  * Conway's Game of Life.
  * It isn't much use on its own and contains a reference to an {@link Environment} that will allow
  * to link the cells together for the simulation to function.
+ *
+ * Attributes:
+ * - random: a reference to a Random numbers generator
+ * - environment: a reference to the current environment
+ * - state: the current state (alive/dead) of the cell
+ * - counted: true if the cell has counted its neighbors
+ * - alive: the number of alive neighbors
  */
 public class Cell {
     private static final Random random = new Random();

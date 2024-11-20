@@ -2,6 +2,10 @@ package model;
 
 /**
  * Handles the refresh rate at which a runnable object gets updated.
+ * Attributes:
+ * - runnable: a reference to a callable
+ * - sleepTime: the time between each execution
+ * - pause: true if the threads are paused, false if not
  */
 public class Scheduler extends Thread {
     private final Runnable runnable;

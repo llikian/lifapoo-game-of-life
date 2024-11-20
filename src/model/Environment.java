@@ -5,6 +5,12 @@ import java.util.HashMap;
 
 /**
  * Simulates an implementation of the Game of Life.
+ * Attributes:
+ * - cells: a 2D array of cells representing the next generation
+ * - oldCells: a 2D array of cells representing the current generation
+ * - width: the width of the grid
+ * - height: the height of the grid
+ * - generation: the current generation's index
  */
 public class Environment extends Observable implements Runnable {
     private Cell[][] cells;
