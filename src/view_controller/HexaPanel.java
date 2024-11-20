@@ -47,13 +47,13 @@ public class HexaPanel extends JPanel {
         this.hexagon[5][0] = 0.866025;
         this.hexagon[5][1] = -0.500000;
 
-        this.cellColors[0] = new Color(0xFFEAE6CC, true);
-        this.cellColors[1] = new Color(0xDAF7A6);
-        this.cellColors[2] = new Color(0xFFC300);
-        this.cellColors[3] = new Color(0xFF5733);
-        this.cellColors[4] = new Color(0xC70039);
-        this.cellColors[5] = new Color(0x900C3F);
-        this.cellColors[6] = new Color(0x581845);
+        this.cellColors[0] = new Color(0xFFEAE6);
+        this.cellColors[1] = new Color(0xFFCC00);
+        this.cellColors[2] = new Color(0xFF9933);
+        this.cellColors[3] = new Color(0xF65F28);
+        this.cellColors[4] = new Color(0xE60909);
+        this.cellColors[5] = new Color(0x900C20);
+        this.cellColors[6] = new Color(0x58182B);
     }
 
     public void toggleOutlines() {
