@@ -3,6 +3,9 @@ package model;
 import java.util.Observable;
 import java.util.HashMap;
 
+/**
+ * Simulates an implementation of the Game of Life.
+ */
 public class Environment extends Observable implements Runnable {
     private Cell[][] cells;
     private Cell[][] oldCells;
@@ -11,6 +14,11 @@ public class Environment extends Observable implements Runnable {
     private int height;
     private int generation;
 
+    /**
+     * Initializes the entire grid with random states.
+     * @param width The width of the grid.
+     * @param height The height of the grid.
+     */
     public Environment(int width, int height) {
         this.cells = new Cell[width][height];
         this.oldCells = new Cell[width][height];
@@ -28,26 +36,56 @@ public class Environment extends Observable implements Runnable {
         }
     }
 
+    /**
+     * The amount of cells in a line of the grid.
+     * @return The grid's width.
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * The amount of cells in a column of the grid.
+     * @return The grid's height.
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * The current state of a specific cell.
+     * @param x The cell's x position in the grid.
+     * @param y The cell's y position in the grid.
+     * @return The cell's state.
+     */
     public boolean getState(int x, int y) {
         return cells[x][y].getState();
     }
 
+    /**
+     * The amount of alive neighbouring cells of a specific cell.
+     * @param x The cell's x position in the grid.
+     * @param y The cell's y position in the grid.
+     * @return The amount of alive neighbouring cells of the cell.
+     */
     public int getAliveCount(int x, int y) {
         return cells[x][y].getAliveCount();
     }
 
+    /**
+     * The current generation of the Game of Life.
+     * @return The current generation.
+     */
     public int getGeneration() {
         return generation;
     }
 
+    /**
+     * Finds the cell that is in the specified direction from another.
+     * @param source The cell from which we start.
+     * @param direction The direction in which the destination cell is located.
+     * @return The destination cell.
+     */
     public Cell getCell(Cell source, Direction direction) {
         Point pos = hashmap.get(source);
         Point shift = new Point(0, 0);
@@ -82,6 +120,9 @@ public class Environment extends Observable implements Runnable {
         return oldCells[(pos.x + shift.x + width) % width][(pos.y + shift.y + height) % height];
     }
 
+    /**
+     * Fills the entire grid with random cells.
+     */
     public void randomState() {
         generation = 1;
 
@@ -96,6 +137,9 @@ public class Environment extends Observable implements Runnable {
         notifyObservers();
     }
 
+    /**
+     * Determines the next generation of the game of life.
+     */
     public void nextState() {
         generation++;
 
@@ -112,6 +156,9 @@ public class Environment extends Observable implements Runnable {
         }
     }
 
+    /**
+     * Updates the game of life and notifies the view.
+     */
     @Override
     public void run() {
         nextState();

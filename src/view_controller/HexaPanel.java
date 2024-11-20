@@ -5,6 +5,9 @@ import model.Environment;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ *
+ */
 public class HexaPanel extends JPanel {
     private final Environment environment;
     private final double[][] hexagon;
@@ -93,6 +96,7 @@ public class HexaPanel extends JPanel {
         }
     }
 
+    @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
 
@@ -100,11 +104,12 @@ public class HexaPanel extends JPanel {
         int height = getHeight();
 
         double r = zoom * 0.55 * width / environment.getWidth();
+
         double shiftX = 2.0 * Math.sqrt(0.75 * r * r);
         double shiftY = Math.sqrt(0.75 * shiftX * shiftX);
 
         double totalW = (environment.getWidth() + 1.5) * shiftX;
-        double totalH = (environment.getHeight() + 1) * shiftY;
+        double totalH = (environment.getHeight() + 1.0) * shiftY;
 
         Polygon hex = new Polygon();
         double[][] origins = new double[6][2];
@@ -119,8 +124,8 @@ public class HexaPanel extends JPanel {
                 double shift = (j % 2 == 0) ? 0.0 : shiftX / 2.0;
 
                 for(int k = 0 ; k < 6 ; k++) {
-                    hex.xpoints[k] = (int) (origins[k][0] + (i + 1) * shiftX + shift + originX);
-                    hex.ypoints[k] = (int) (origins[k][1] + (j + 1) * shiftY + originY);
+                    hex.xpoints[k] = (int) Math.round(origins[k][0] + (i + 1) * shiftX + shift + originX);
+                    hex.ypoints[k] = (int) Math.round(origins[k][1] + (j + 1) * shiftY + originY);
                 }
 
                 if(environment.getState(i, j)) {

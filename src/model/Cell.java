@@ -2,6 +2,12 @@ package model;
 
 import java.util.Random;
 
+/**
+ * A {@link Cell} is a wrapper for a boolean (a state) that contains functionality to simulate
+ * Conway's Game of Life.
+ * It isn't much use on its own and contains a reference to an {@link Environment} that will allow
+ * to link the cells together for the simulation to function.
+ */
 public class Cell {
     private static final Random random = new Random();
     private final Environment environment;
@@ -9,6 +15,10 @@ public class Cell {
     private boolean counted;
     private int alive;
 
+    /**
+     * Initializes a cell's fields. The initial state of a cell is random.
+     * @param environment The environment the cell is a part of.
+     */
     public Cell(Environment environment) {
         this.environment = environment;
         randomState();
@@ -16,6 +26,10 @@ public class Cell {
         this.alive = 0;
     }
 
+    /**
+     * Copy constructor for a cell.
+     * @param cell The cell to copy the values from.
+     */
     public Cell(Cell cell) {
         this.environment = cell.environment;
         this.state = cell.state;
@@ -23,10 +37,18 @@ public class Cell {
         this.alive = cell.alive;
     }
 
+    /**
+     * @return The cell's state.
+     */
     public boolean getState() {
         return state;
     }
 
+    /**
+     * If it was not already calculated, counts the amount of cells that are alive around this cell
+     * and returns it.
+     * @return The amount of alive cells around of this one.
+     */
     public int getAliveCount() {
         if(!counted) {
             countAliveNeighbors();
@@ -36,12 +58,18 @@ public class Cell {
         return alive;
     }
 
+    /**
+     * Replaces the cell's state with a random one.
+     */
     public void randomState() {
         state = random.nextBoolean();
         counted = false;
     }
 
-    public void countAliveNeighbors() {
+    /**
+     * Counts the amount of cells that are alive around this one.
+     */
+    private void countAliveNeighbors() {
         alive = 0;
 
         alive += environment.getCell(this, Direction.upL).state ? 1 : 0;
@@ -52,6 +80,9 @@ public class Cell {
         alive += environment.getCell(this, Direction.downR).state ? 1 : 0;
     }
 
+    /**
+     * Applies the rules of the Game of Life to determine the new state of the cell.
+     */
     public void nextState() {
         if(!counted) {
             countAliveNeighbors();
