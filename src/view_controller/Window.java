@@ -10,6 +10,19 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 
+/**
+ * @class Window
+ * @brief A class representing the current window
+ * Attributes:
+ * - Environment: a reference to the current environment
+ * - Scheduler: a reference to the scheduler
+ * - centralPanel: a reference to the HexaPanel used to represent the game
+ * - infoLabel: a Label displaying useful information to the user
+ * - mainPanel: The panel used to display the HexaPanel
+ * - downPanel: a panel to the bottom of the screen
+ * - buttonsPanel: a panel filled with a bunch of buttons
+ * - pauseButton: a pause button
+ */
 public class Window extends JFrame implements Observer {
     private final Environment environment;
     private final Scheduler scheduler;
@@ -20,6 +33,10 @@ public class Window extends JFrame implements Observer {
     private final JPanel buttonsPanel;
     private final JButton pauseButton;
 
+    /**
+     * @param environment A reference to the current environment
+     * @param scheduler A reference to the current scheduler
+     */
     public Window(Environment environment, Scheduler scheduler) {
         super();
 
@@ -42,6 +59,9 @@ public class Window extends JFrame implements Observer {
         handleWheelEvents();
     }
 
+    /**
+     * The init function used to set up the screen style
+     */
     private void initStyle() {
         Color backgroundColor = new Color(30, 30, 30);
         Color foregroundColor = new Color(0xFFDFC1);
@@ -86,6 +106,9 @@ public class Window extends JFrame implements Observer {
         UIManager.put("MenuBar.border", 0);
     }
 
+    /**
+     * The window initializer
+     */
     private void initWindow() {
         setTitle("Game of Life");
         setSize(800, 800);
@@ -104,6 +127,9 @@ public class Window extends JFrame implements Observer {
         downPanel.add(infoLabel, BorderLayout.WEST);
     }
 
+    /**
+     * The border initializer
+     */
     private void initBorders() {
         Color borderColor = new Color(0xFFDFC1);
         int borderWidth = 1;
@@ -113,6 +139,9 @@ public class Window extends JFrame implements Observer {
         buttonsPanel.setBorder(BorderFactory.createLineBorder(borderColor, borderWidth));
     }
 
+    /**
+     * The initializer for the button panel
+     */
     private void initButtonsPanel() {
         Window window = this;
 
@@ -153,6 +182,9 @@ public class Window extends JFrame implements Observer {
         });
     }
 
+    /**
+     * The menuBar initializer
+     */
     private void initMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("File");
@@ -163,6 +195,9 @@ public class Window extends JFrame implements Observer {
         menu.add(itemLoad);
     }
 
+    /**
+     * The controller used by the keyboard
+     */
     private void handleKeyEvents() {
         Window window = this;
 
@@ -205,6 +240,9 @@ public class Window extends JFrame implements Observer {
         });
     }
 
+    /**
+     * The controller for the mouse
+     */
     private void handleWheelEvents() {
         addMouseWheelListener(new MouseAdapter() {
             @Override
@@ -223,6 +261,9 @@ public class Window extends JFrame implements Observer {
         });
     }
 
+    /**
+     * A function to force the infolabel to be repainted
+     */
     private void repaintInfoLabel() {
         String text = " ";
         text += "Generation " + environment.getGeneration();
@@ -233,11 +274,19 @@ public class Window extends JFrame implements Observer {
         infoLabel.setText(text);
     }
 
+    /**
+     * The controller to force the game to be paused
+     */
     private void togglePause() {
         scheduler.togglePause();
         pauseButton.setText(scheduler.isPaused() ? "Play" : "Pause");
     }
 
+    /**
+     * @param o   the observable object.
+     * @param arg an argument passed to the {@code notifyObservers}
+     *            method.
+     */
     @Override
     public void update(Observable o, Object arg) {
         centralPanel.repaint();

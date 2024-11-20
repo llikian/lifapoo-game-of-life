@@ -6,7 +6,19 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- *
+ * @class HexaPanel
+ * @brief This class is used to represent the panel of Hexagons, representing the game of life.
+ * Attributes:
+ * - Environment: A reference to the current environment
+ * - hexagon: a 2D array representing the panel to draw
+ * - cellColors: a 1D array representing the colors of every cell
+ * - zoomRate: the step between each zoom/de-zoom
+ * - zoom: the multiplier used to zoom/de-zoom functionality
+ * - MoveDirection: an enumeration of possible movement on the panel
+ * - sensitivity: the step between two movement on the panel
+ * - originX: the current position of the X axis origin
+ * - originY: the current position of the Y axis origin
+ * - outlines: Used to display or not the outlines of each cell
  */
 public class HexaPanel extends JPanel {
     private final Environment environment;
@@ -23,6 +35,9 @@ public class HexaPanel extends JPanel {
 
     private boolean outlines;
 
+    /**
+     * @param environment The current environment we want to use
+     */
     public HexaPanel(Environment environment) {
         this.environment = environment;
         this.hexagon = new double[6][2];
@@ -59,26 +74,41 @@ public class HexaPanel extends JPanel {
         this.cellColors[6] = new Color(0x58182B);
     }
 
+    /**
+     * Flips on/off the outline display
+     */
     public void toggleOutlines() {
         outlines = !outlines;
     }
 
+    /**
+     * @return the current zoom
+     */
     public double getZoom() {
         return zoom;
     }
 
+    /**
+     * Increase the zoom multiplier
+     */
     public void zoomIn()  {
         if(zoom < 10.0) {
             zoom += zoomRate;
         }
     }
 
+    /**
+     * Decrease the zoom multiplier
+     */
     public void zoomOut()  {
         if(zoom > zoomRate) {
             zoom -= zoomRate;
         }
     }
 
+    /**
+     * @param direction the direction to move the origin to
+     */
     public void move(MoveDirection direction) {
         switch(direction) {
             case up:
@@ -96,6 +126,10 @@ public class HexaPanel extends JPanel {
         }
     }
 
+    /**
+     * A custom method to paint specific component to the screen
+     * @param graphics the <code>Graphics</code> object to protect
+     */
     @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
