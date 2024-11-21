@@ -108,8 +108,11 @@ public class HexaPanel extends JPanel {
                     double x = event.getX();
                     double y = event.getY();
 
-                    y = (y - originY - (getWidth() - totalH) / 2.0 - radius) / shiftY;
-                    x = (x - originX - ((y % 2 == 0) ? 0.0 : 1.0) - (getHeight() - totalW) / 2.0 - radius) / shiftX;
+                    int width = getWidth();
+                    int height = getHeight();
+
+                    y = (y - originY - (height - totalH) / 2.0 - radius) / shiftY;
+                    x = (x - originX - ((y % 2 == 0) ? 0.0 : 1.0) - (width - totalW) / 2.0 - radius) / shiftX;
 
                     if(x < 0.0 || x > environment.getWidth() || y < 0.0 || y > environment.getHeight()) {
                         return;

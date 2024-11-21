@@ -169,6 +169,7 @@ public class Window extends JFrame implements Observer {
             public void actionPerformed(ActionEvent actionEvent) {
                 environment.genocide();
                 centralPanel.repaint();
+                repaintInfoLabel();
             }
         });
 
