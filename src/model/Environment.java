@@ -6,15 +6,13 @@ import java.util.HashMap;
 /**
  * Simulates an implementation of the Game of Life.
  * Attributes:
- * - cells: a 2D array of cells representing the next generation
- * - oldCells: a 2D array of cells representing the current generation
+ * - cells: a 2D array of cells
  * - width: the width of the grid
  * - height: the height of the grid
  * - generation: the current generation's index
  */
 public class Environment extends Observable implements Runnable {
     private Cell[][] cells;
-    private Cell[][] oldCells;
     private HashMap<Cell, Point> hashmap;
     private int width;
     private int height;
@@ -27,7 +25,6 @@ public class Environment extends Observable implements Runnable {
      */
     public Environment(int width, int height) {
         this.cells = new Cell[width][height];
-        this.oldCells = new Cell[width][height];
         this.hashmap = new HashMap<>();
         this.width = width;
         this.height = height;
@@ -37,7 +34,6 @@ public class Environment extends Observable implements Runnable {
             for(int j = 0 ; j < height ; j++) {
                 cells[i][j] = new Cell(this);
                 hashmap.put(cells[i][j], new Point(i, j));
-                oldCells[i][j] = new Cell(cells[i][j]);
             }
         }
     }
@@ -86,6 +82,13 @@ public class Environment extends Observable implements Runnable {
         return generation;
     }
 
+    public void toggleState(int x, int y) {
+        cells[x][y].toggleState();
+
+        setChanged();
+        notifyObservers();
+    }
+
     /**
      * Finds the cell that is in the specified direction from another.
      * @param source The cell from which we start.
@@ -123,7 +126,7 @@ public class Environment extends Observable implements Runnable {
                 break;
         }
 
-        return oldCells[(pos.x + shift.x + width) % width][(pos.y + shift.y + height) % height];
+        return cells[(pos.x + shift.x + width) % width][(pos.y + shift.y + height) % height];
     }
 
     /**
@@ -135,7 +138,7 @@ public class Environment extends Observable implements Runnable {
         for(int i = 0 ; i < width ; i++) {
             for(int j = 0 ; j < height ; j++) {
                 cells[i][j].randomState();
-                oldCells[i][j] = new Cell(cells[i][j]);
+                cells[i][j].counted = false;
             }
         }
 
@@ -152,12 +155,26 @@ public class Environment extends Observable implements Runnable {
         for(int i = 0 ; i < width ; i++) {
             for(int j = 0 ; j < height ; j++) {
                 cells[i][j].nextState();
+                cells[i][j].counted = false;
             }
         }
 
         for(int i = 0 ; i < width ; i++) {
             for(int j = 0 ; j < height ; j++) {
-                oldCells[i][j] = new Cell(cells[i][j]);
+                cells[i][j].flip();
+            }
+        }
+    }
+
+    /**
+     * Kills the entire colony.
+     */
+    public void genocide() {
+        generation = 1;
+
+        for(int i = 0 ; i < width ; i++) {
+            for(int j = 0 ; j < height ; j++) {
+                cells[i][j].kill();
             }
         }
     }

@@ -97,11 +97,11 @@ public class Window extends JFrame implements Observer {
         UIManager.put("MenuItem.selectionForeground", foregroundColor);
         UIManager.put("Button.selectionForeground", foregroundColor);
 
-        /* Border Thickness */
+        /* Border Color */
         UIManager.put("Panel.borderColor", Color.white);
         UIManager.put("MenuBar.borderColor", Color.white);
 
-        /* Border Color */
+        /* Border Thickness */
         UIManager.put("Panel.border", 1);
         UIManager.put("MenuBar.border", 0);
     }
@@ -119,6 +119,8 @@ public class Window extends JFrame implements Observer {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setContentPane(mainPanel);
+
+        mainPanel.getAlignmentX();
 
         mainPanel.add(centralPanel, BorderLayout.CENTER);
         mainPanel.add(downPanel, BorderLayout.SOUTH);
@@ -154,6 +156,19 @@ public class Window extends JFrame implements Observer {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 environment.randomState();
+            }
+        });
+
+        /* Genocide Button */
+        JButton genocideButton = new JButton("Genocide");
+        genocideButton.setFocusable(false);
+        buttonsPanel.add(genocideButton);
+
+        genocideButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                environment.genocide();
+                centralPanel.repaint();
             }
         });
 

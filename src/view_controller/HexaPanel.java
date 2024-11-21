@@ -4,6 +4,7 @@ import model.Environment;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 /**
  * @class HexaPanel
@@ -34,6 +35,16 @@ public class HexaPanel extends JPanel {
     private double originY;
 
     private boolean outlines;
+
+    private double radius;
+
+    private double shiftX;
+    private double shiftY;
+
+    private double totalW;
+    private double totalH;
+
+    private double[][] origins;
 
     /**
      * @param environment The current environment we want to use
@@ -72,6 +83,66 @@ public class HexaPanel extends JPanel {
         this.cellColors[4] = new Color(0xE60909);
         this.cellColors[5] = new Color(0x900C20);
         this.cellColors[6] = new Color(0x58182B);
+
+        this.origins = new double[6][2];
+
+        update();
+
+        /* Resize Listener */
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent event) {
+                super.componentResized(event);
+
+                update();
+            }
+        });
+
+        /* Mouse Listener */
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent event) {
+                super.mouseClicked(event);
+
+                if(event.getButton() == MouseEvent.BUTTON1) {
+                    double x = event.getX();
+                    double y = event.getY();
+
+                    int width = getWidth();
+                    int height = getHeight();
+
+                    y = (y - originY - (height - totalH) / 2.0 - radius) / shiftY;
+                    x = (x - originX - ((y % 2 == 0) ? 0.0 : 1.0) - (width - totalW) / 2.0 - radius) / shiftX;
+
+                    if(x < 0 || x > environment.getWidth() || y < 0 || y > environment.getHeight()) {
+                        return;
+                    }
+
+                    environment.toggleState((int) x, (int) y);
+                }
+            }
+        });
+    }
+
+    /**
+     * Updates all of the fields necessary for drawing the grid.
+     */
+    public void update() {
+        int width = getWidth();
+        int height = getHeight();
+
+        radius = zoom * 0.55 * width / environment.getWidth();
+
+        shiftX = 2.0 * Math.sqrt(0.75 * radius * radius);
+        shiftY = Math.sqrt(0.75 * shiftX * shiftX);
+
+        totalW = (environment.getWidth() + 1.5) * shiftX;
+        totalH = (environment.getHeight() + 1.0) * shiftY;
+
+        for(int k = 0 ; k < 6 ; ++k) {
+            origins[k][0] = (width - totalW) / 2.0 + radius * hexagon[k][0];
+            origins[k][1] = (height - totalH) / 2.0 + radius * hexagon[k][1];
+        }
     }
 
     /**
@@ -95,6 +166,8 @@ public class HexaPanel extends JPanel {
         if(zoom < 10.0) {
             zoom += zoomRate;
         }
+
+        update();
     }
 
     /**
@@ -104,6 +177,8 @@ public class HexaPanel extends JPanel {
         if(zoom > zoomRate) {
             zoom -= zoomRate;
         }
+
+        update();
     }
 
     /**
@@ -134,23 +209,9 @@ public class HexaPanel extends JPanel {
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
 
-        int width = getWidth();
-        int height = getHeight();
-
-        double r = zoom * 0.55 * width / environment.getWidth();
-
-        double shiftX = 2.0 * Math.sqrt(0.75 * r * r);
-        double shiftY = Math.sqrt(0.75 * shiftX * shiftX);
-
-        double totalW = (environment.getWidth() + 1.5) * shiftX;
-        double totalH = (environment.getHeight() + 1.0) * shiftY;
-
         Polygon hex = new Polygon();
-        double[][] origins = new double[6][2];
         for(int k = 0 ; k < 6 ; ++k) {
             hex.addPoint(0, 0);
-            origins[k][0] = (width - totalW) / 2.0 + r * hexagon[k][0];
-            origins[k][1] = (height - totalH) / 2.0 + r * hexagon[k][1];
         }
 
         for(int i = 0 ; i < environment.getWidth() ; i++) {
