@@ -27,11 +27,12 @@ public class Window extends JFrame implements Observer {
     private final Environment environment;
     private final Scheduler scheduler;
     private final HexaPanel centralPanel;
-    private final JLabel infoLabel;
     private final JPanel mainPanel;
     private final JPanel downPanel;
     private final JPanel buttonsPanel;
     private final JButton pauseButton;
+    private final JLabel infoLabel;
+    private final JTextField speedField;
 
     /**
      * @param environment A reference to the current environment
@@ -45,11 +46,12 @@ public class Window extends JFrame implements Observer {
         this.environment = environment;
         this.scheduler = scheduler;
         this.centralPanel = new HexaPanel(environment);
-        this.infoLabel = new JLabel("");
         this.mainPanel = new JPanel(new BorderLayout());
         this.downPanel = new JPanel(new BorderLayout());
         this.buttonsPanel = new JPanel(new FlowLayout());
         this.pauseButton = new JButton("Pause");
+        this.infoLabel = new JLabel("");
+        this.speedField = new JTextField(String.valueOf(scheduler.getSleepTime()));
 
         initWindow();
         initBorders();
@@ -196,6 +198,9 @@ public class Window extends JFrame implements Observer {
                 window.repaint();
             }
         });
+
+        /* Speed Time Text Field */
+        buttonsPanel.add(speedField);
     }
 
     /**
@@ -307,5 +312,9 @@ public class Window extends JFrame implements Observer {
     public void update(Observable o, Object arg) {
         centralPanel.repaint();
         repaintInfoLabel();
+
+        if(!speedField.hasFocus()) {
+            scheduler.setSleepTime(Integer.parseInt(speedField.getText()));
+        }
     }
 }

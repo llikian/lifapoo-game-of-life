@@ -32,6 +32,13 @@ public class Scheduler extends Thread {
     }
 
     /**
+     * Returns the refresh rate.
+     */
+    public long getSleepTime() {
+        return sleepTime;
+    }
+
+    /**
      * @return A boolean representing wether the scheduler is paused.
      */
     public boolean isPaused() {
