@@ -29,7 +29,9 @@ public class HexaPanel extends JPanel {
     private final double zoomRate;
     private double zoom;
 
-    public enum MoveDirection { up, down, left, right };
+    public enum MoveDirection {up, down, left, right}
+
+    ;
     private final double sensitivity;
     private double originX;
     private double originY;
@@ -111,14 +113,14 @@ public class HexaPanel extends JPanel {
                     int width = getWidth();
                     int height = getHeight();
 
-                    y = (y - originY - (height - totalH) / 2.0 - radius) / shiftY;
-                    x = (x - originX - ((y % 2 == 0) ? 0.0 : 1.0) - (width - totalW) / 2.0 - radius) / shiftX;
+                    y = Math.round((y - originY - (height - totalH) / 2.0) / shiftY - 1.0);
+                    x = (x - originX - (width - totalW) / 2.0) / shiftX - (((int) y % 2 == 0) ? 1.0 : 1.5);
 
                     if(x < 0.0 || x > environment.getWidth() || y < 0.0 || y > environment.getHeight()) {
                         return;
                     }
 
-                    environment.toggleState((int) x, (int) y);
+                    environment.toggleState((int) Math.round(x), (int) y);
                 }
             }
         });
@@ -162,7 +164,7 @@ public class HexaPanel extends JPanel {
     /**
      * Increase the zoom multiplier
      */
-    public void zoomIn()  {
+    public void zoomIn() {
         if(zoom < 10.0) {
             zoom += zoomRate;
         }
@@ -173,7 +175,7 @@ public class HexaPanel extends JPanel {
     /**
      * Decrease the zoom multiplier
      */
-    public void zoomOut()  {
+    public void zoomOut() {
         if(zoom > zoomRate) {
             zoom -= zoomRate;
         }
@@ -203,6 +205,7 @@ public class HexaPanel extends JPanel {
 
     /**
      * A custom method to paint specific component to the screen
+     *
      * @param graphics the <code>Graphics</code> object to protect
      */
     @Override
