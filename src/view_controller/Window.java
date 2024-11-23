@@ -32,7 +32,7 @@ public class Window extends JFrame implements Observer {
     private final JPanel buttonsPanel;
     private final JButton pauseButton;
     private final JLabel infoLabel;
-    private final JTextField speedField;
+    private final JSlider speedSlider;
 
     /**
      * @param environment A reference to the current environment
@@ -51,7 +51,7 @@ public class Window extends JFrame implements Observer {
         this.buttonsPanel = new JPanel(new FlowLayout());
         this.pauseButton = new JButton("Pause");
         this.infoLabel = new JLabel("");
-        this.speedField = new JTextField(String.valueOf(scheduler.getSleepTime()));
+        this.speedSlider = new JSlider(20, 2000, (int) scheduler.getSleepTime());
 
         initWindow();
         initBorders();
@@ -79,6 +79,7 @@ public class Window extends JFrame implements Observer {
         UIManager.put("Menu.background", backgroundBrighter);
         UIManager.put("MenuItem.background", backgroundBrighter);
         UIManager.put("PopupMenu.background", backgroundColor);
+        UIManager.put("Slider.background", backgroundColor);
 
         /* Foreground Colors */
         UIManager.put("Panel.foreground", foregroundColor);
@@ -88,6 +89,7 @@ public class Window extends JFrame implements Observer {
         UIManager.put("MenuBar.foreground", foregroundColor);
         UIManager.put("Menu.foreground", foregroundColor);
         UIManager.put("MenuItem.foreground", foregroundColor);
+        UIManager.put("Slider.foreground", foregroundColor);
 
         /* Selected / Hovered Background Colors */
         UIManager.put("Menu.selectionBackground", selectionBackground);
@@ -113,7 +115,7 @@ public class Window extends JFrame implements Observer {
      */
     private void initWindow() {
         setTitle("Game of Life");
-        setSize(800, 800);
+        setSize(1400, 800);
         setLocationRelativeTo(null);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
@@ -121,8 +123,6 @@ public class Window extends JFrame implements Observer {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         setContentPane(mainPanel);
-
-        mainPanel.getAlignmentX();
 
         mainPanel.add(centralPanel, BorderLayout.CENTER);
         mainPanel.add(downPanel, BorderLayout.SOUTH);
@@ -200,7 +200,8 @@ public class Window extends JFrame implements Observer {
         });
 
         /* Speed Time Text Field */
-        buttonsPanel.add(speedField);
+        speedSlider.setFocusable(false);
+        buttonsPanel.add(speedSlider);
     }
 
     /**
@@ -289,7 +290,9 @@ public class Window extends JFrame implements Observer {
         String text = " ";
         text += "Generation " + environment.getGeneration();
         text += " | ";
-        text += "Zoom: " + centralPanel.getZoom() + "x";
+        text += "Zoom: " + centralPanel.getZoom() + 'x';
+        text += " | ";
+        text += "Refresh Rate: " + scheduler.getSleepTime() + "ms";
         text += ' ';
 
         infoLabel.setText(text);
@@ -312,9 +315,6 @@ public class Window extends JFrame implements Observer {
     public void update(Observable o, Object arg) {
         centralPanel.repaint();
         repaintInfoLabel();
-
-        if(!speedField.hasFocus()) {
-            scheduler.setSleepTime(Integer.parseInt(speedField.getText()));
-        }
+        scheduler.setSleepTime(speedSlider.getValue());
     }
 }

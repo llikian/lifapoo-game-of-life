@@ -38,8 +38,6 @@ public class HexaPanel extends JPanel {
 
     private boolean outlines;
 
-    private double radius;
-
     private double shiftX;
     private double shiftY;
 
@@ -133,7 +131,12 @@ public class HexaPanel extends JPanel {
         int width = getWidth();
         int height = getHeight();
 
-        radius = zoom * 0.55 * width / environment.getWidth();
+        double radius = zoom * 0.55;
+        if(width < height) {
+            radius *= (double) width / environment.getWidth();
+        } else {
+            radius *= (double) height / environment.getHeight();
+        }
 
         shiftX = 2.0 * Math.sqrt(0.75 * radius * radius);
         shiftY = Math.sqrt(0.75 * shiftX * shiftX);
@@ -166,7 +169,7 @@ public class HexaPanel extends JPanel {
      */
     public void zoomIn() {
         if(zoom < 10.0) {
-            zoom += zoomRate;
+            zoom += zoomRate / 2;
         }
 
         update();
@@ -177,7 +180,7 @@ public class HexaPanel extends JPanel {
      */
     public void zoomOut() {
         if(zoom > zoomRate) {
-            zoom -= zoomRate;
+            zoom -= zoomRate / 2;
         }
 
         update();
