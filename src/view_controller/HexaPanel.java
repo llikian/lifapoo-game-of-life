@@ -71,7 +71,7 @@ public class HexaPanel extends JPanel {
         this.hexagon[2][1] = 0.5;
         this.hexagon[3][0] = -0.86602540378443864676372317;
         this.hexagon[3][1] = -0.5;
-        this.hexagon[4][0] = -0.0;
+        this.hexagon[4][0] = 0.0;
         this.hexagon[4][1] = -1.0;
         this.hexagon[5][0] = 0.86602540378443864676372317;
         this.hexagon[5][1] = -0.5;
