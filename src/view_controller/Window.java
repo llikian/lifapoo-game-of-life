@@ -6,9 +6,15 @@ import model.Scheduler;
 import java.awt.*;
 
 import java.awt.event.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.FileChooserUI;
 
 /**
  * @class Window
@@ -36,7 +42,7 @@ public class Window extends JFrame implements Observer {
 
     /**
      * @param environment A reference to the current environment
-     * @param scheduler A reference to the current scheduler
+     * @param scheduler   A reference to the current scheduler
      */
     public Window(Environment environment, Scheduler scheduler) {
         super();
@@ -209,12 +215,61 @@ public class Window extends JFrame implements Observer {
      */
     private void initMenuBar() {
         JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("File");
-        JMenuItem itemLoad = new JMenuItem("Load");
-
         setJMenuBar(menuBar);
+
+        JMenu menu = new JMenu("File");
         menuBar.add(menu);
+
+        JMenuItem itemLoad = new JMenuItem("Load");
         menu.add(itemLoad);
+        itemLoad.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    JFileChooser chooser = new JFileChooser(
+                            System.getProperty("user.dir") + FileSystems.getDefault().getSeparator() + "data");
+
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Game Of Life data files", "gol");
+                    chooser.setFileFilter(filter);
+
+                    if(chooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
+                        environment.loadFromFile(chooser.getSelectedFile().getPath());
+                    }
+                } catch(FileNotFoundException exception) {
+                    throw new RuntimeException(exception);
+                }
+            }
+        });
+
+        JMenuItem itemSave = new JMenuItem("Save");
+        menu.add(itemSave);
+        itemSave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    JFileChooser chooser = new JFileChooser(
+                            System.getProperty("user.dir") + FileSystems.getDefault().getSeparator() + "data");
+
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Game Of Life data files (.gol)", "gol");
+                    chooser.setFileFilter(filter);
+
+                    if(chooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
+                        File file = chooser.getSelectedFile();
+                        String filename = file.getName();
+
+                        int index = filename.lastIndexOf(".");
+
+                        if(index > 0 && filename.substring(index + 1).equalsIgnoreCase("gol")) {
+                            environment.saveToFile(file.getPath());
+                        } else {
+                            environment.saveToFile(file.getPath() + ".gol");
+                        }
+                    }
+                } catch(IOException exception) {
+                    throw new RuntimeException(exception);
+                }
+            }
+        });
     }
 
     /**

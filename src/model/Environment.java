@@ -1,7 +1,12 @@
 package model;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Observable;
 import java.util.HashMap;
+import java.util.Scanner;
 
 /**
  * Simulates an implementation of the Game of Life.
@@ -20,7 +25,8 @@ public class Environment extends Observable implements Runnable {
 
     /**
      * Initializes the entire grid with random states.
-     * @param width The width of the grid.
+     *
+     * @param width  The width of the grid.
      * @param height The height of the grid.
      */
     public Environment(int width, int height) {
@@ -36,10 +42,71 @@ public class Environment extends Observable implements Runnable {
                 hashmap.put(cells[i][j], new Point(i, j));
             }
         }
+
+        try {
+            saveToFile("data/test.gol");
+        } catch(java.io.IOException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    /**
+     * Loads an environment from the data contained in a file.
+     *
+     * @param path The path to the file containing the data.
+     */
+    public void loadFromFile(String path) throws FileNotFoundException {
+        File file = new File(path);
+        Scanner scanner = new Scanner(file);
+
+        width = scanner.nextInt();
+        height = scanner.nextInt();
+        generation = scanner.nextInt();
+
+        int c;
+        for(int i = 0 ; i < width ; i++) {
+            for(int j = 0 ; j < height ; j++) {
+                c = scanner.nextInt();
+                cells[i][j].setState(c == 1);
+            }
+        }
+
+        scanner.close();
+    }
+
+    /**
+     * Saves the environment's state to a file.
+     *
+     * @param path The path at which the file will be saved.
+     */
+    public void saveToFile(String path) throws IOException {
+        File file = new File(path);
+        if(!file.createNewFile()) {
+            file.delete();
+        }
+
+        FileWriter writer = new FileWriter(path);
+
+        writer.write(String.valueOf(width) + ' ');
+        writer.write(String.valueOf(height) + '\n');
+        writer.write(String.valueOf(generation) + '\n');
+        writer.write('\n');
+
+        for(int i = 0 ; i < width ; i++) {
+            for(int j = 0 ; j < height ; j++) {
+                writer.write(cells[i][j].getState() ? '1' : '0');
+                writer.write(' ');
+            }
+
+            writer.write('\n');
+        }
+
+        writer.close();
     }
 
     /**
      * The amount of cells in a line of the grid.
+     *
      * @return The grid's width.
      */
     public int getWidth() {
@@ -48,6 +115,7 @@ public class Environment extends Observable implements Runnable {
 
     /**
      * The amount of cells in a column of the grid.
+     *
      * @return The grid's height.
      */
     public int getHeight() {
@@ -56,6 +124,7 @@ public class Environment extends Observable implements Runnable {
 
     /**
      * The current state of a specific cell.
+     *
      * @param x The cell's x position in the grid.
      * @param y The cell's y position in the grid.
      * @return The cell's state.
@@ -66,6 +135,7 @@ public class Environment extends Observable implements Runnable {
 
     /**
      * The amount of alive neighbouring cells of a specific cell.
+     *
      * @param x The cell's x position in the grid.
      * @param y The cell's y position in the grid.
      * @return The amount of alive neighbouring cells of the cell.
@@ -76,12 +146,19 @@ public class Environment extends Observable implements Runnable {
 
     /**
      * The current generation of the Game of Life.
+     *
      * @return The current generation.
      */
     public int getGeneration() {
         return generation;
     }
 
+    /**
+     * Toggles the state of a specific cell.
+     *
+     * @param x The cell's x position in the grid.
+     * @param y The cell's y position in the grid.
+     */
     public void toggleState(int x, int y) {
         cells[x][y].toggleState();
 
@@ -91,7 +168,8 @@ public class Environment extends Observable implements Runnable {
 
     /**
      * Finds the cell that is in the specified direction from another.
-     * @param source The cell from which we start.
+     *
+     * @param source    The cell from which we start.
      * @param direction The direction in which the destination cell is located.
      * @return The destination cell.
      */

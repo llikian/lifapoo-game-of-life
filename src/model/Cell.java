@@ -80,6 +80,15 @@ public class Cell {
     }
 
     /**
+     * Changes the cell's state.
+     * @param state The cell's new state.
+     */
+    public void setState(boolean state) {
+        this.state = state;
+        makeNeighboursCount();
+    }
+
+    /**
      * Toggles the cell's state.
      */
     public void toggleState() {
