@@ -14,7 +14,6 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.FileChooserUI;
 
 /**
  * @class Window
@@ -229,12 +228,14 @@ public class Window extends JFrame implements Observer {
                     JFileChooser chooser = new JFileChooser(
                             System.getProperty("user.dir") + FileSystems.getDefault().getSeparator() + "data");
 
-                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Game Of Life data files", "gol");
+                    FileNameExtensionFilter filter = new FileNameExtensionFilter("Game Of Life data files (.gol)", "gol");
                     chooser.setFileFilter(filter);
 
                     if(chooser.showOpenDialog(getParent()) == JFileChooser.APPROVE_OPTION) {
                         environment.loadFromFile(chooser.getSelectedFile().getPath());
                     }
+
+                    centralPanel.repaint();
                 } catch(FileNotFoundException exception) {
                     throw new RuntimeException(exception);
                 }
@@ -326,13 +327,6 @@ public class Window extends JFrame implements Observer {
             public void mouseWheelMoved(MouseWheelEvent event) {
                 super.mouseWheelMoved(event);
 
-                if(event.getWheelRotation() < 0) {
-                    centralPanel.zoomIn();
-                } else {
-                    centralPanel.zoomOut();
-                }
-
-                centralPanel.repaint();
                 repaintInfoLabel();
             }
         });
@@ -345,7 +339,7 @@ public class Window extends JFrame implements Observer {
         String text = " ";
         text += "Generation " + environment.getGeneration();
         text += " | ";
-        text += "Zoom: " + centralPanel.getZoom() + 'x';
+        text += "Zoom: " + centralPanel.getScale() + 'x';
         text += " | ";
         text += "Refresh Rate: " + scheduler.getSleepTime() + "ms";
         text += ' ';

@@ -27,7 +27,7 @@ public class HexaPanel extends JPanel {
     private Color[] cellColors;
 
     private final double zoomRate;
-    private double zoom;
+    private double scale;
 
     public enum MoveDirection {up, down, left, right}
 
@@ -55,7 +55,7 @@ public class HexaPanel extends JPanel {
         this.cellColors = new Color[7];
 
         this.zoomRate = 0.5;
-        this.zoom = 1.0;
+        this.scale = 1.0;
 
         this.sensitivity = 10.0;
         this.originX = 0.0;
@@ -122,6 +122,32 @@ public class HexaPanel extends JPanel {
                 }
             }
         });
+
+        /* Mouse Wheel Listener */
+        addMouseWheelListener(new MouseAdapter() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent event) {
+                super.mouseWheelMoved(event);
+
+                final double zoom = event.getWheelRotation() * zoomRate;
+
+                scale += zoom;
+                scale = Math.round(scale * 10.0) / 10.0; // Rounds to 1 decimal
+                scale = Math.max(Math.min(scale, 10.0), 0.5); // Clamps the scale value
+
+//                originX = (mouse.x - (originX + getWidth()) / 2.0);
+//                originY = (mouse.y - (originY + getHeight()) / 2.0);
+
+//                Point mouse = getMousePosition();
+//                Point center = new Point(mouse.x + getWidth() / 2, mouse.y + getHeight() / 2);
+//
+//                originX = zoom * (originX - center.x) + center.x;
+//                originY = zoom * (originY - center.y) + center.y;
+
+                update();
+                repaint();
+            }
+        });
     }
 
     /**
@@ -131,7 +157,7 @@ public class HexaPanel extends JPanel {
         int width = getWidth();
         int height = getHeight();
 
-        double radius = zoom * 0.55;
+        double radius = scale * 0.55;
         if(width < height) {
             radius *= (double) width / environment.getWidth();
         } else {
@@ -158,32 +184,10 @@ public class HexaPanel extends JPanel {
     }
 
     /**
-     * @return the current zoom
+     * @return The current scale
      */
-    public double getZoom() {
-        return zoom;
-    }
-
-    /**
-     * Increase the zoom multiplier
-     */
-    public void zoomIn() {
-        if(zoom < 10.0) {
-            zoom += zoomRate / 2;
-        }
-
-        update();
-    }
-
-    /**
-     * Decrease the zoom multiplier
-     */
-    public void zoomOut() {
-        if(zoom > zoomRate) {
-            zoom -= zoomRate / 2;
-        }
-
-        update();
+    public double getScale() {
+        return scale;
     }
 
     /**
@@ -192,16 +196,16 @@ public class HexaPanel extends JPanel {
     public void move(MoveDirection direction) {
         switch(direction) {
             case up:
-                originY += sensitivity;
+                originY += sensitivity * scale;
                 break;
             case down:
-                originY -= sensitivity;
+                originY -= sensitivity * scale;
                 break;
             case left:
-                originX += sensitivity;
+                originX += sensitivity * scale;
                 break;
             case right:
-                originX -= sensitivity;
+                originX -= sensitivity * scale;
                 break;
         }
     }
