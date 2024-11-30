@@ -1,6 +1,7 @@
 package view_controller;
 
 import model.Environment;
+import model.Utility;
 
 import javax.swing.*;
 import java.awt.*;
@@ -129,20 +130,8 @@ public class HexaPanel extends JPanel {
             public void mouseWheelMoved(MouseWheelEvent event) {
                 super.mouseWheelMoved(event);
 
-                final double zoom = event.getWheelRotation() * zoomRate;
-
-                scale += zoom;
-                scale = Math.round(scale * 10.0) / 10.0; // Rounds to 1 decimal
-                scale = Math.max(Math.min(scale, 10.0), 0.5); // Clamps the scale value
-
-//                originX = (mouse.x - (originX + getWidth()) / 2.0);
-//                originY = (mouse.y - (originY + getHeight()) / 2.0);
-
-//                Point mouse = getMousePosition();
-//                Point center = new Point(mouse.x + getWidth() / 2, mouse.y + getHeight() / 2);
-//
-//                originX = zoom * (originX - center.x) + center.x;
-//                originY = zoom * (originY - center.y) + center.y;
+                scale += event.getWheelRotation() * zoomRate;
+                scale = Utility.clamp(0.5, 10.0, Math.round(scale * 10.0) / 10.0); // Rounds to 1 decimal and clamps.
 
                 update();
                 repaint();
@@ -208,6 +197,12 @@ public class HexaPanel extends JPanel {
                 originX -= sensitivity * scale;
                 break;
         }
+
+        double width = scale * getWidth() / 2.0;
+        double height = scale * getHeight() / 2.0;
+
+        originX = Utility.clamp(-width, width, originX);
+        originY = Utility.clamp(-height, height, originY);
     }
 
     /**
