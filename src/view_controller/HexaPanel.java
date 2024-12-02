@@ -214,6 +214,8 @@ public class HexaPanel extends JPanel {
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
 
+        double x, y;
+
         Polygon hex = new Polygon();
         for(int k = 0 ; k < 6 ; ++k) {
             hex.addPoint(0, 0);
@@ -221,11 +223,12 @@ public class HexaPanel extends JPanel {
 
         for(int i = 0 ; i < environment.getWidth() ; i++) {
             for(int j = 0 ; j < environment.getHeight() ; j++) {
-                double shift = (j % 2 == 0) ? 0.0 : shiftX / 2.0;
+                x = (double) (i + 1) * shiftX + originX + ((j % 2 == 0) ? 0.0 : shiftX / 2.0);
+                y = (double) (j + 1) * shiftY + originY;
 
                 for(int k = 0 ; k < 6 ; k++) {
-                    hex.xpoints[k] = (int) Math.round(origins[k][0] + (i + 1) * shiftX + shift + originX);
-                    hex.ypoints[k] = (int) Math.round(origins[k][1] + (j + 1) * shiftY + originY);
+                    hex.xpoints[k] = (int) Math.round(origins[k][0] + x);
+                    hex.ypoints[k] = (int) Math.round(origins[k][1] + y);
                 }
 
                 if(environment.getState(i, j)) {
@@ -235,6 +238,7 @@ public class HexaPanel extends JPanel {
 
                 if(outlines) {
                     graphics.setColor(Color.white);
+                    ((Graphics2D) graphics).setStroke(new BasicStroke((int) scale));
                     graphics.drawPolygon(hex);
                 }
             }
