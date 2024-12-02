@@ -130,7 +130,7 @@ public class HexaPanel extends JPanel {
             public void mouseWheelMoved(MouseWheelEvent event) {
                 super.mouseWheelMoved(event);
 
-                scale += event.getWheelRotation() * zoomRate;
+                scale -= Math.signum(event.getWheelRotation()) * zoomRate;
                 scale = Utility.clamp(0.5, 10.0, Math.round(scale * 10.0) / 10.0); // Rounds to 1 decimal and clamps.
 
                 update();
