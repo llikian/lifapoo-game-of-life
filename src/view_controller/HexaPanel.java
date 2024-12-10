@@ -93,8 +93,6 @@ public class HexaPanel extends JPanel {
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent event) {
-                super.componentResized(event);
-
                 update();
             }
         });
@@ -103,23 +101,11 @@ public class HexaPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent event) {
-                super.mouseClicked(event);
-
                 if(event.getButton() == MouseEvent.BUTTON1) {
-                    double x = event.getX();
-                    double y = event.getY();
-
-                    int width = getWidth();
-                    int height = getHeight();
-
-                    y = Math.round((y - originY - (height - totalH) / 2.0) / shiftY - 1.0);
-                    x = (x - originX - (width - totalW) / 2.0) / shiftX - (((int) y % 2 == 0) ? 1.0 : 1.5);
-
-                    if(x < 0.0 || x > environment.getWidth() || y < 0.0 || y > environment.getHeight()) {
-                        return;
+                    Point index = getIndexFromMousePosition();
+                    if(index != null) {
+                        environment.toggleState(index.x, index.y);
                     }
-
-                    environment.toggleState((int) Math.round(x), (int) y);
                 }
             }
         });
@@ -128,8 +114,6 @@ public class HexaPanel extends JPanel {
         addMouseWheelListener(new MouseAdapter() {
             @Override
             public void mouseWheelMoved(MouseWheelEvent event) {
-                super.mouseWheelMoved(event);
-
                 scale -= Math.signum(event.getWheelRotation()) * zoomRate;
                 scale = Utility.clamp(0.5, 10.0, Math.round(scale * 10.0) / 10.0); // Rounds to 1 decimal and clamps.
 
@@ -179,6 +163,24 @@ public class HexaPanel extends JPanel {
         return scale;
     }
 
+    private Point getIndexFromMousePosition() {
+        Point mousePos = getMousePosition();
+        double x = mousePos.x;
+        double y = mousePos.y;
+
+        int width = getWidth();
+        int height = getHeight();
+
+        y = Math.round((y - originY - (height - totalH) / 2.0) / shiftY - 1.0);
+        x = (x - originX - (width - totalW) / 2.0) / shiftX - (((int) y % 2 == 0) ? 1.0 : 1.5);
+
+        if(x < 0.0 || x > environment.getWidth() || y < 0.0 || y > environment.getHeight()) {
+            return null;
+        }
+
+        return new Point((int) Math.round(x), (int) y);
+    }
+
     /**
      * @param direction the direction to move the origin to
      */
@@ -214,6 +216,7 @@ public class HexaPanel extends JPanel {
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
 
+        Point mouseIndex = getIndexFromMousePosition();
         double x, y;
 
         Polygon hex = new Polygon();
