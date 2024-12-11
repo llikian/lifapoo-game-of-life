@@ -8,19 +8,19 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * @class HexaPanel
- * @brief This class is used to represent the panel of Hexagons, representing the game of life.
- * Attributes:
- * - Environment: A reference to the current environment
- * - hexagon: a 2D array representing the panel to draw
- * - cellColors: a 1D array representing the colors of every cell
- * - zoomRate: the step between each zoom/de-zoom
- * - zoom: the multiplier used to zoom/de-zoom functionality
- * - MoveDirection: an enumeration of possible movement on the panel
- * - sensitivity: the step between two movement on the panel
- * - originX: the current position of the X axis origin
- * - originY: the current position of the Y axis origin
- * - outlines: Used to display or not the outlines of each cell
+ * This class is used to represent the panel of Hexagons, representing the game of life.
+ * <p>
+ * Attributes:<br>
+ * - Environment: A reference to the current environment.<br>
+ * - hexagon: a 2D array representing the panel to draw.<br>
+ * - cellColors: a 1D array representing the colors of every cell.<br>
+ * - zoomRate: the step between each zoom/de-zoom.<br>
+ * - zoom: the multiplier used to zoom/de-zoom functionality.<br>
+ * - MoveDirection: an enumeration of possible movement on the panel.<br>
+ * - sensitivity: the step between two movement on the panel.<br>
+ * - originX: the current position of the X axis origin.<br>
+ * - originY: the current position of the Y axis origin.<br>
+ * - outlines: Used to display or not the outlines of each cell.
  */
 public class HexaPanel extends JPanel {
     private final Environment environment;
@@ -32,7 +32,6 @@ public class HexaPanel extends JPanel {
 
     public enum MoveDirection {up, down, left, right}
 
-    ;
     private final double sensitivity;
     private double originX;
     private double originY;
@@ -48,7 +47,7 @@ public class HexaPanel extends JPanel {
     private double[][] origins;
 
     /**
-     * @param environment The current environment we want to use
+     * @param environment The current environment we want to use.
      */
     public HexaPanel(Environment environment) {
         this.environment = environment;
@@ -163,8 +162,16 @@ public class HexaPanel extends JPanel {
         return scale;
     }
 
+    /**
+     * Calculates the index of the environment's cell that is under the mouse.
+     * @return If the mouse is over a cell, the index of said cell, null otherwise.
+     */
     private Point getIndexFromMousePosition() {
         Point mousePos = getMousePosition();
+        if(mousePos == null) {
+            return null;
+        }
+
         double x = mousePos.x;
         double y = mousePos.y;
 
@@ -182,7 +189,7 @@ public class HexaPanel extends JPanel {
     }
 
     /**
-     * @param direction the direction to move the origin to
+     * @param direction The direction to move the origin to.
      */
     public void move(MoveDirection direction) {
         switch(direction) {
@@ -208,15 +215,14 @@ public class HexaPanel extends JPanel {
     }
 
     /**
-     * A custom method to paint specific component to the screen
+     * A custom method to paint specific component to the screen.
      *
-     * @param graphics the <code>Graphics</code> object to protect
+     * @param graphics The <code>Graphics</code> object to protect.
      */
     @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
 
-        Point mouseIndex = getIndexFromMousePosition();
         double x, y;
 
         Polygon hex = new Polygon();

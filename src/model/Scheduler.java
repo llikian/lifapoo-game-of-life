@@ -2,10 +2,11 @@ package model;
 
 /**
  * Handles the refresh rate at which a runnable object gets updated.
- * Attributes:
- * - runnable: a reference to a callable
- * - sleepTime: the time between each execution
- * - pause: true if the threads are paused, false if not
+ * <p>
+ * Attributes:<br>
+ * - runnable: a reference to a callable.<br>
+ * - sleepTime: the time between each execution.<br>
+ * - pause: true if the threads are paused, false if not.
  */
 public class Scheduler extends Thread {
     private final Runnable runnable;
@@ -14,8 +15,9 @@ public class Scheduler extends Thread {
 
     /**
      * Creates a scheduler.
+     *
      * @param sleepTime The refresh rate.
-     * @param runnable The object that gets updated.
+     * @param runnable  The object that gets updated.
      */
     public Scheduler(long sleepTime, Runnable runnable) {
         this.sleepTime = sleepTime;
@@ -25,6 +27,7 @@ public class Scheduler extends Thread {
 
     /**
      * Changes the refresh rate.
+     *
      * @param sleepTime The new refresh rate.
      */
     public void setSleepTime(long sleepTime) {

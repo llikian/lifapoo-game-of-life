@@ -2,9 +2,10 @@ package model;
 
 /**
  * A 2D point.
- * Attributes:
- * - x: the x coordinate
- * - y: the y coordinate
+ * <p>
+ * Attributes:<br>
+ * - x: the x coordinate.<br>
+ * - y: the y coordinate.
  */
 public class Point {
     public int x;
@@ -20,6 +21,7 @@ public class Point {
 
     /**
      * Creates a point with specified coordinates.
+     *
      * @param x The x coordinate.
      * @param y The y coordinate.
      */

@@ -10,11 +10,12 @@ import java.util.Scanner;
 
 /**
  * Simulates an implementation of the Game of Life.
- * Attributes:
- * - cells: a 2D array of cells
- * - width: the width of the grid
- * - height: the height of the grid
- * - generation: the current generation's index
+ * <p>
+ * Attributes:<br>
+ * - cells: a 2D array of cells.<br>
+ * - width: the width of the grid.<br>
+ * - height: the height of the grid.<br>
+ * - generation: the current generation's index.
  */
 public class Environment extends Observable implements Runnable {
     private Cell[][] cells;
