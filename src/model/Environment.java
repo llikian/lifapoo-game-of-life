@@ -43,12 +43,6 @@ public class Environment extends Observable implements Runnable {
                 hashmap.put(cells[i][j], new Point(i, j));
             }
         }
-
-        try {
-            saveToFile("data/test.gol");
-        } catch(java.io.IOException exception) {
-            throw new RuntimeException(exception);
-        }
     }
 
     /**
