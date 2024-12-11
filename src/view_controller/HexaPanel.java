@@ -248,7 +248,6 @@ public class HexaPanel extends JPanel {
 
                 if(outlines) {
                     graphics.setColor(Color.white);
-                    ((Graphics2D) graphics).setStroke(new BasicStroke((int) scale));
                     graphics.drawPolygon(hex);
                 }
             }

@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                Environment environment = new Environment(100, 50);
+                Environment environment = new Environment(250, 125);
                 Scheduler scheduler = new Scheduler(500, environment);
                 Window window = new Window(environment, scheduler);
 
