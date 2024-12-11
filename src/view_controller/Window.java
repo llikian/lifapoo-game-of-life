@@ -3,8 +3,9 @@ package view_controller;
 import model.Environment;
 import model.Scheduler;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-
 import java.awt.event.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,8 +13,6 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * A class representing the current window.

@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Observable;
 import java.util.HashMap;
+import java.util.Observable;
 import java.util.Scanner;
 
 /**

@@ -164,6 +164,7 @@ public class HexaPanel extends JPanel {
 
     /**
      * Calculates the index of the environment's cell that is under the mouse.
+     *
      * @return If the mouse is over a cell, the index of said cell, null otherwise.
      */
     private Point getIndexFromMousePosition() {

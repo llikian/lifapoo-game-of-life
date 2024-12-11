@@ -2,7 +2,7 @@ import model.Environment;
 import model.Scheduler;
 import view_controller.Window;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 public class Main {
 
